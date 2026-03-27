@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Canada Visit 2026 — Enercare Centre Parking Operations</title>
+<!-- <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --gold:        #B8952A;
+  --gold-deep:   #8B6914;
+  --gold-dk:     #6B4F0A;
+  --gold-light:  #F5E6B8;
+  --gold-pale:   #FAF5E4;
+  --gold-xpale:  #FDFAEF;
+  --gold-mid:    #D4AA45;
+  --gold-border: #DCC878;
+  --gold-divider:#C8A84A;
+  --cream:       #FFFEF8;
+  --cream2:      #FAF7ED;
+  --dark:        #1E1608;
+  --dark2:       #2E2210;
+  --mid:         #5C4820;
+  --muted:       #8C7848;
+  --muted2:      #A89060;
+  --white:       #FFFFFF;
+  --font:        'Inter', sans-serif;
+  --serif:       'Cormorant Garamond', serif;
+  --mono:        'Inter', sans-serif;  /* tabular nums via feature below */
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:14px; }
+body { font-family:var(--font); background:var(--cream2); color:var(--dark); min-height:100vh; }
+
+/* ══ HEADER ══════════════════════════════════════════════ */
+.header-wrap {
+  background: linear-gradient(180deg, #0E0C06 0%, #1A1508 60%, #221C0A 100%);
+  border-bottom: 2px solid var(--gold-divider);
+  position: sticky; top:0; z-index:100;
+}
+.header-logo-row {
+  display:flex; align-items:center; justify-content:center;
+  padding:10px 24px 8px; border-bottom:1px solid rgba(184,149,42,0.2);
+}
+.header-brand { display:flex; align-items:center; gap:14px; }
+.header-emblem {
+  height:54px; width:54px; object-fit:contain;
+  filter:brightness(1.1) contrast(1.05);
+}
+.header-brand-text { display:flex; flex-direction:column; gap:2px; }
+.header-title-main {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:600; color:var(--gold-light); letter-spacing:.03em; line-height:1.2;
+}
+.header-title-sub {
+  font-family:'Inter',sans-serif; font-size:13px; font-weight:500;
+  letter-spacing:.12em; text-transform:uppercase; color:rgba(184,149,42,0.75);
+}
+.header-controls-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 24px;
+}
+.header-venue {
+  font-family: var(--font); font-size: 12px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(184,149,42,0.75);
+}
+.header-right { display:flex; align-items:center; gap:14px; }
+.day-toggle {
+  display:flex; background:rgba(184,149,42,0.1); border-radius:20px;
+  padding:3px; gap:2px; border:1px solid rgba(184,149,42,0.25);
+}
+.day-btn {
+  padding:4px 14px; border-radius:16px; border:none;
+  background:transparent; color:rgba(184,149,42,0.55);
+  font-size:13px; font-weight:600; cursor:pointer;
+  font-family:var(--font); transition:all .15s; letter-spacing:.02em;
+}
+.day-btn.active { background:var(--gold); color:#1A1508; }
+.live-pill { display:flex; align-items:center; gap:5px; font-size:12px; color:rgba(184,149,42,0.7); letter-spacing:.04em; }
+.live-dot { width:7px; height:7px; border-radius:50%; background:#6DBF5E; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.last-update { font-size:11px; color:rgba(184,149,42,0.6); font-family:var(--mono); }
+.mode-badge {
+  display:flex; align-items:center; gap:5px; padding:3px 10px;
+  border-radius:14px; font-size:12px; font-weight:600; white-space:nowrap;
+  letter-spacing:.02em;
+}
+.mode-badge.command { background:rgba(184,149,42,0.15); color:var(--gold-mid); border:1px solid rgba(184,149,42,0.35); }
+.mode-badge.view    { background:rgba(109,191,94,0.15);  color:#4A9E3E; border:1px solid rgba(109,191,94,0.35); }
+.badge-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.mode-badge.command .badge-dot { background:var(--gold-mid); }
+.mode-badge.view    .badge-dot { background:#6DBF5E; }
+.switch-btn {
+  padding:4px 12px; border-radius:14px;
+  border:1px solid rgba(184,149,42,0.35); background:transparent;
+  color:rgba(184,149,42,0.75); font-size:12px; font-weight:600;
+  cursor:pointer; font-family:var(--font); transition:all .15s;
+  white-space:nowrap; letter-spacing:.02em;
+}
+.switch-btn:hover { border-color:var(--gold); color:var(--gold-light); background:rgba(184,149,42,0.1); }
+
+/* ══ FILTER BAR ══════════════════════════════════════════ */
+.filterbar {
+  background:var(--cream); border-bottom:1px solid var(--gold-border);
+  padding:9px 24px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.filter-label {
+  font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted2); white-space:nowrap;
+}
+.slot-strip {
+  display:flex; gap:4px; overflow-x:auto; flex:1; padding-bottom:5px;
+  scrollbar-width:thin; scrollbar-color:var(--gold) var(--gold-light);
+}
+.slot-strip::-webkit-scrollbar { height:4px; }
+.slot-strip::-webkit-scrollbar-track { background:var(--gold-light); border-radius:2px; }
+.slot-strip::-webkit-scrollbar-thumb { background:var(--gold); border-radius:2px; }
+.slot-strip::-webkit-scrollbar-thumb:hover { background:var(--gold-deep); }
+.sbt {
+  flex-shrink:0; padding:3px 9px; border-radius:5px; border:1px solid transparent;
+  background:transparent; font-size:10px; font-weight:500; color:var(--muted2);
+  cursor:pointer; font-family:var(--mono); transition:all .12s; white-space:nowrap;
+}
+.sbt:hover { background:var(--gold-pale); color:var(--mid); }
+.sbt.has-data { border-color:var(--gold-border); color:var(--gold-deep); }
+.sbt.active { background:var(--gold-deep); color:var(--gold-xpale); border-color:var(--gold-dk); }
+.slot-info { font-size:9px; color:var(--muted2); white-space:nowrap; font-family:var(--mono); }
+.reset-btn {
+  display:flex; align-items:center; gap:5px; padding:4px 12px; border-radius:14px;
+  border:1px solid var(--gold-border); background:transparent; color:var(--gold-deep);
+  font-size:10px; font-weight:600; cursor:pointer; font-family:var(--font);
+  transition:all .15s; white-space:nowrap; letter-spacing:.03em;
+}
+.reset-btn:hover { background:var(--gold-pale); border-color:var(--gold); }
+.reset-btn svg { width:11px; height:11px; stroke:var(--gold-deep); fill:none; stroke-width:2; stroke-linecap:round; }
+
+/* ══ ALERT ══════════════════════════════════════════════ */
+.alert-strip {
+  margin:14px 24px 0; padding:9px 16px; border-radius:7px;
+  display:flex; align-items:center; gap:10px; font-size:11px; font-weight:600;
+}
+.alert-strip.critical { background:#FDE8DC; color:#6B2200; border:1px solid #C07040; }
+.alert-strip.ok       { background:#EAF5DC; color:#2D5A1B; border:1px solid #8AB86A; }
+.alert-dot-strip { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.alert-strip.critical .alert-dot-strip { background:#C07040; }
+.alert-strip.ok       .alert-dot-strip { background:#639922; }
+
+/* ══ MAIN ════════════════════════════════════════════════ */
+.main { padding:14px 24px 32px; display:flex; flex-direction:column; gap:14px; }
+
+/* ══ KPI STRIP ═══════════════════════════════════════════ */
+.kpi-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.kpi-row-label {
+  grid-column:1/-1; font-size:9px; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--muted2); padding:4px 2px 0;
+  display:flex; align-items:center; gap:8px;
+}
+.kpi-row-label::after { content:''; flex:1; height:1px; background:var(--gold-border); }
+.kpi-card {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:10px;
+  padding:13px 15px; border-top:3px solid transparent; transition:border-top-color .3s;
+}
+.kpi-card:hover { box-shadow:0 2px 12px rgba(184,149,42,0.12); }
+.kpi-label {
+  font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted2); margin-bottom:5px;
+}
+.kpi-value { font-size:26px; font-weight:600; color:var(--dark); line-height:1; font-family:var(--mono); }
+.kpi-sub   { font-size:9px; color:var(--muted2); margin-top:4px; }
+.kpi-target {
+  display:inline-block; font-size:9px; font-weight:700; padding:2px 8px;
+  border-radius:10px; margin-top:5px; letter-spacing:.02em;
+}
+
+/* ══ ROWS ════════════════════════════════════════════════ */
+.row-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.row-3 { display:grid; grid-template-columns:2fr 1fr 1fr; gap:14px; }
+
+/* ══ CARD ════════════════════════════════════════════════ */
+.card {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:10px; padding:14px;
+}
+.card-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.card-title {
+  font-family:var(--serif); font-size:14px; font-weight:600; color:var(--dark2);
+  letter-spacing:.01em;
+}
+.card-sub  { font-size:10px; color:var(--muted2); margin-top:2px; }
+.card-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:18px; }
+.chart-wrap { position:relative; width:100%; }
+
+/* ══ LOT ROWS ════════════════════════════════════════════ */
+.lot-rows { display:flex; flex-direction:column; gap:9px; }
+.lot-row  { display:flex; align-items:center; gap:9px; }
+.lot-name { font-size:11px; font-weight:700; color:var(--dark2); width:48px; flex-shrink:0; font-family:var(--mono); }
+.lot-role { font-size:9px; color:var(--muted2); width:86px; flex-shrink:0; }
+.lot-track { flex:1; height:9px; background:var(--gold-pale); border-radius:5px; overflow:hidden; border:1px solid var(--gold-border); }
+.lot-fill  { height:9px; border-radius:5px; transition:width .5s ease; }
+.lot-pct   { font-size:11px; font-weight:700; width:32px; text-align:right; flex-shrink:0; font-family:var(--mono); }
+.lot-etf   { font-size:9px; color:var(--muted2); width:34px; text-align:right; flex-shrink:0; font-family:var(--mono); }
+.lot-badge { font-size:9px; font-weight:700; padding:2px 6px; border-radius:5px; width:52px; text-align:center; flex-shrink:0; }
+.status-legend { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:12px; padding-top:10px; border-top:1px solid var(--gold-border); }
+.sl-item { display:flex; align-items:center; gap:5px; }
+.sl-dot  { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.sl-text { font-size:9px; }
+
+/* ══ MODE CARDS ══════════════════════════════════════════ */
+.mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.mode-card { padding:10px 12px; border-radius:8px; display:flex; align-items:center; justify-content:space-between; }
+.mode-name { font-size:11px; font-weight:600; }
+.mode-tgt  { font-size:9px; margin-top:2px; }
+.mode-val  { font-size:20px; font-weight:600; text-align:right; font-family:var(--mono); }
+.mode-pct  { font-size:9px; font-weight:400; display:block; text-align:right; margin-top:1px; }
+
+/* ══ COACH TRACKER ═══════════════════════════════════════ */
+.coach-rows { display:flex; flex-direction:column; gap:11px; }
+.coach-row  { display:flex; flex-direction:column; gap:4px; }
+.coach-header { display:flex; align-items:center; justify-content:space-between; }
+.coach-lbl { font-size:10px; font-weight:600; color:var(--mid); }
+.coach-val { font-size:13px; font-weight:600; font-family:var(--mono); color:var(--dark); }
+.coach-track { height:7px; background:var(--gold-pale); border-radius:4px; overflow:hidden; border:1px solid var(--gold-border); }
+.coach-fill  { height:7px; border-radius:4px; transition:width .5s; }
+.coach-meta  { font-size:9px; color:var(--muted2); }
+
+/* ══ LOG TABLE ═══════════════════════════════════════════ */
+.tbl-wrap { overflow-x:auto; border-radius:7px; border:1px solid var(--gold-border); }
+table.dash-tbl { width:100%; border-collapse:collapse; font-size:11px; }
+table.dash-tbl thead th {
+  background:var(--gold-pale); color:var(--mid); font-weight:700; font-size:9px;
+  letter-spacing:.06em; text-transform:uppercase; padding:7px 10px;
+  text-align:left; border-bottom:1px solid var(--gold-border); white-space:nowrap;
+}
+table.dash-tbl tbody td {
+  padding:6px 10px; border-bottom:1px solid rgba(184,149,42,0.12);
+  color:var(--dark); white-space:nowrap; font-family:var(--mono); font-size:11px;
+}
+table.dash-tbl tbody tr.active-row td { background:var(--gold-pale); }
+table.dash-tbl tbody tr:hover td { background:var(--cream2); }
+.pct-cell { font-weight:700; }
+
+/* ══ LEGEND ══════════════════════════════════════════════ */
+.legend { display:flex; gap:12px; flex-wrap:wrap; }
+.leg-item { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--muted2); }
+.leg-sq { width:8px; height:8px; border-radius:2px; display:inline-block; flex-shrink:0; }
+
+/* ══ ENTRY PANEL ════════════════════════════════════════ */
+.entry-panel {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:10px; padding:14px;
+  border-top:3px solid var(--gold);
+}
+.entry-title {
+  font-family:var(--serif); font-size:14px; font-weight:600; color:var(--dark2); margin-bottom:2px;
+}
+.entry-sub   { font-size:9px; color:var(--muted2); margin-bottom:12px; }
+.entry-slot-badge {
+  display:inline-block; background:var(--gold-deep); color:var(--gold-pale);
+  font-size:10px; font-weight:700; padding:2px 10px; border-radius:10px;
+  font-family:var(--mono); margin-left:6px; letter-spacing:.04em;
+}
+.entry-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.entry-group-title {
+  font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted2); margin-bottom:8px; padding-bottom:5px;
+  border-bottom:1px solid var(--gold-border);
+}
+.entry-fields { display:flex; flex-direction:column; gap:5px; }
+.efield { display:flex; align-items:center; gap:7px; }
+.efield-label { font-size:10px; font-weight:600; width:88px; flex-shrink:0; }
+.efield-input {
+  width:64px; padding:5px 7px; border-radius:5px; font-size:12px;
+  text-align:center; font-family:var(--mono); font-weight:600;
+  border:1.5px solid var(--gold-border); background:var(--cream2); color:var(--dark);
+  outline:none; transition:border-color .15s;
+}
+.efield-input:focus { border-color:var(--gold); background:var(--gold-xpale); }
+.efield-hint { font-size:9px; color:var(--muted2); }
+.outbound-row {
+  margin-top:9px; padding-top:9px; border-top:1px solid var(--gold-border);
+  display:flex; align-items:center; gap:7px;
+}
+.outbound-label { font-size:10px; font-weight:700; color:#8B0000; }
+
+/* ══ VIEWER SECTIONS ════════════════════════════════════ */
+.view-only-section { display:none; }
+body.view-mode .view-only-section { display:block; }
+body.view-mode .cmd-only-section  { display:none !important; }
+body.view-mode .reset-btn         { display:none !important; }
+body.view-mode .entry-panel       { display:none !important; }
+body.view-mode .filterbar          { display:none !important; }
+body.view-mode .alert-strip        { display:none !important; }
+body.view-mode .kpi-strip          { display:none !important; }
+body.view-mode .row-2              { display:none !important; }
+body.view-mode .row-3              { display:none !important; }
+
+.report-section { margin-bottom:14px; }
+.report-heading {
+  font-family:var(--serif); font-size:16px; font-weight:600; color:var(--gold-deep);
+  margin-bottom:10px; padding-bottom:7px; border-bottom:1px solid var(--gold-border);
+  display:flex; align-items:center; gap:10px; letter-spacing:.01em;
+}
+.report-heading::before {
+  content:''; display:inline-block; width:3px; height:16px;
+  background:var(--gold); border-radius:2px; flex-shrink:0;
+}
+
+.summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:12px; }
+.sum-card {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:10px;
+  padding:14px 16px; border-left:4px solid transparent;
+}
+.sum-card-lbl { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted2); margin-bottom:4px; }
+.sum-card-val { font-size:28px; font-weight:600; font-family:var(--mono); line-height:1; }
+.sum-card-sub { font-size:9px; color:var(--muted2); margin-top:3px; }
+.sum-card-tgt { font-size:9px; font-weight:700; padding:2px 8px; border-radius:8px; margin-top:6px; display:inline-block; }
+
+.lot-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.lot-sum-card {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:10px;
+  padding:14px 16px; text-align:center;
+}
+.lsc-name { font-family:var(--serif); font-size:16px; font-weight:700; color:var(--gold-deep); margin-bottom:3px; }
+.lsc-role { font-size:9px; color:var(--muted2); margin-bottom:9px; }
+.lsc-occ  { font-size:24px; font-weight:600; font-family:var(--mono); line-height:1; }
+.lsc-cap  { font-size:9px; color:var(--muted2); margin-top:2px; }
+.lsc-time { font-size:10px; font-weight:700; margin-top:8px; padding:3px 10px; border-radius:8px; display:inline-block; }
+
+.kpi-explain-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.kex-card {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:10px; padding:14px 16px;
+  transition: box-shadow .2s;
+}
+.kex-card:hover { box-shadow: 0 2px 12px rgba(184,149,42,0.1); }
+.kex-name  { font-family:var(--serif); font-size:14px; font-weight:700; color:var(--dark2); margin-bottom:3px; }
+.kex-calc  { font-size:9px; color:var(--muted2); font-style:italic; margin-bottom:5px; font-family:var(--mono); }
+.kex-what  { font-size:11px; color:var(--mid); line-height:1.55; }
+.kex-status { font-size:9px; font-weight:700; padding:2px 8px; border-radius:6px; margin-top:8px; display:inline-block; }
+
+.timeline-tbl-wrap { overflow-x:auto; border-radius:8px; border:1px solid var(--gold-border); }
+table.timeline-tbl { width:100%; border-collapse:collapse; font-size:11px; }
+table.timeline-tbl thead th {
+  background:var(--gold-deep); color:rgba(250,245,228,0.92); font-size:9px; font-weight:700;
+  letter-spacing:.06em; text-transform:uppercase; padding:8px 10px; text-align:center; white-space:nowrap;
+}
+table.timeline-tbl thead th:first-child { text-align:left; border-radius:8px 0 0 0; }
+table.timeline-tbl thead th:last-child  { border-radius:0 8px 0 0; }
+table.timeline-tbl tbody td {
+  padding:6px 10px; border-bottom:1px solid rgba(184,149,42,0.1);
+  text-align:center; font-family:var(--mono); font-size:11px; color:var(--dark);
+}
+table.timeline-tbl tbody td:first-child { text-align:left; font-weight:700; color:var(--gold-deep); }
+table.timeline-tbl tbody tr:hover td { background:var(--gold-pale); }
+table.timeline-tbl tbody tr.row-alt td { background:var(--cream2); }
+.pct-ok   { color:#27500A; font-weight:700; }
+.pct-busy { color:#633806; font-weight:700; }
+.pct-crit { color:#6B2200; font-weight:700; }
+.pct-full { color:#5A0000; font-weight:700; }
+
+.dl-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; gap:12px; flex-wrap:wrap; }
+.dl-btn {
+  display:flex; align-items:center; gap:8px; padding:9px 20px; border-radius:8px;
+  background:var(--gold-deep); color:var(--gold-xpale);
+  border:none; cursor:pointer; font-family:var(--font);
+  font-size:12px; font-weight:700; transition:all .15s; white-space:nowrap; letter-spacing:.03em;
+}
+.dl-btn:hover { background:var(--gold); color:var(--dark); }
+.dl-btn svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+
+/* ══ VIEWER CUMULATIVE ════════════════════════════════════ */
+.mode-breakdown-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.mbd-card { background:var(--cream); border:1px solid var(--gold-border); border-radius:10px; padding:14px 16px; border-top:4px solid transparent; }
+.mbd-lbl  { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted2); margin-bottom:4px; }
+.mbd-val  { font-size:32px; font-weight:600; font-family:'Inter',sans-serif; font-variant-numeric:tabular-nums; line-height:1; }
+.mbd-sub  { font-size:10px; color:var(--muted2); margin-top:4px; }
+.mbd-tgt  { font-size:10px; font-weight:700; padding:3px 10px; border-radius:8px; margin-top:8px; display:inline-block; }
+.mbd-bar-wrap { height:6px; background:var(--gold-pale); border-radius:3px; margin-top:8px; border:1px solid var(--gold-border); overflow:hidden; }
+.mbd-bar  { height:6px; border-radius:3px; transition:width .6s ease; }
+.peak-grid  { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.peak-card  { background:var(--cream); border:1px solid var(--gold-border); border-radius:10px; padding:14px 16px; }
+.peak-lbl   { font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted2); margin-bottom:6px; }
+.peak-time  { font-size:16px; font-weight:700; font-family:'Inter',sans-serif; color:var(--gold-deep); }
+.peak-val   { font-size:13px; font-weight:600; font-family:'Inter',sans-serif; font-variant-numeric:tabular-nums; color:var(--dark); margin-top:2px; }
+.peak-note  { font-size:10px; color:var(--muted2); margin-top:4px; line-height:1.45; }
+@media(max-width:820px){ .mode-breakdown-grid{grid-template-columns:repeat(2,minmax(0,1fr));} .peak-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:540px){ .mode-breakdown-grid{grid-template-columns:1fr 1fr;} .peak-grid{grid-template-columns:1fr;} }
+
+/* ══ MODALS ══════════════════════════════════════════════ */
+.modal-overlay {
+  display:none; position:fixed; inset:0; background:rgba(14,12,6,0.85);
+  z-index:999; align-items:center; justify-content:center;
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:14px;
+  padding:32px 36px; width:340px; text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,0.4);
+}
+.modal-icon {
+  width:48px; height:48px; background:var(--gold-pale); border:1px solid var(--gold-border);
+  border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;
+}
+.modal-icon svg { width:22px; height:22px; stroke:var(--gold-deep); fill:none; stroke-width:2; stroke-linecap:round; }
+.modal-title { font-family:var(--serif); font-size:18px; font-weight:600; color:var(--dark); margin-bottom:6px; }
+.modal-sub   { font-size:12px; color:var(--muted); margin-bottom:20px; line-height:1.5; }
+.modal-input {
+  width:100%; padding:10px 14px; border:1.5px solid var(--gold-border);
+  border-radius:8px; font-size:20px; font-family:var(--mono); font-weight:700;
+  text-align:center; letter-spacing:10px; outline:none;
+  color:var(--dark); background:var(--cream2); margin-bottom:12px; transition:border-color .15s;
+}
+.modal-input:focus { border-color:var(--gold); background:var(--gold-xpale); }
+.modal-input.error { border-color:#C07040; background:#FDE8DC; }
+.modal-error { font-size:11px; color:#C07040; font-weight:700; margin-bottom:12px; min-height:16px; }
+.modal-btn {
+  width:100%; padding:11px; border-radius:8px; border:none;
+  background:var(--gold-deep); color:var(--gold-xpale);
+  font-size:13px; font-weight:700; cursor:pointer; font-family:var(--font);
+  transition:background .15s; margin-bottom:8px; letter-spacing:.04em;
+}
+.modal-btn:hover { background:var(--gold); color:var(--dark); }
+.modal-cancel {
+  font-size:11px; color:var(--muted2); background:none; border:none;
+  cursor:pointer; font-family:var(--font); padding:4px;
+}
+.modal-cancel:hover { color:var(--dark); }
+.confirm-box {
+  background:var(--cream); border:1px solid var(--gold-border); border-radius:14px;
+  padding:28px 32px; width:360px; text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,0.4);
+}
+.confirm-icon {
+  width:48px; height:48px; background:var(--gold-pale); border:1px solid var(--gold-border);
+  border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
+}
+.confirm-icon svg { width:22px; height:22px; stroke:var(--gold-deep); fill:none; stroke-width:2; stroke-linecap:round; }
+.confirm-title { font-family:var(--serif); font-size:17px; font-weight:600; color:var(--dark); margin-bottom:6px; }
+.confirm-sub   { font-size:12px; color:var(--muted); margin-bottom:20px; line-height:1.5; }
+.confirm-btns  { display:flex; gap:10px; }
+.confirm-cancel-btn {
+  flex:1; padding:9px; border-radius:8px; border:1.5px solid var(--gold-border);
+  background:var(--cream2); font-size:13px; font-weight:600; cursor:pointer;
+  font-family:var(--font); color:var(--mid); transition:all .15s;
+}
+.confirm-cancel-btn:hover { background:var(--gold-pale); }
+.confirm-reset-btn {
+  flex:1; padding:9px; border-radius:8px; border:none;
+  background:var(--gold-deep); font-size:13px; font-weight:700;
+  cursor:pointer; font-family:var(--font); color:var(--gold-xpale); transition:background .15s;
+}
+.confirm-reset-btn:hover { background:var(--gold); color:var(--dark); }
+
+
+/* ══ NUMERIC READABILITY ════════════════════════════════ */
+.kpi-value, .coach-val, .lot-pct, .lot-name, .mode-val,
+.sum-card-val, .lsc-occ, .entry-slot-badge,
+table.dash-tbl tbody td, table.timeline-tbl tbody td,
+.slot-strip .sbt, .slot-info {
+  font-family: 'Inter', sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.kpi-value  { font-size: 28px; font-weight: 600; }
+.mode-val   { font-size: 22px; font-weight: 600; }
+.coach-val  { font-size: 14px; font-weight: 600; }
+.sum-card-val { font-size: 30px; font-weight: 600; }
+.lsc-occ    { font-size: 26px; font-weight: 600; }
+
+
+/* ══ RESPONSIVE ══════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .kpi-strip { grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .row-3 { grid-template-columns: 1fr 1fr; }
+  .row-3 > *:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 820px) {
+  .header-controls-row { flex-wrap: wrap; gap: 8px; }
+  .header-right { flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+  .header-venue { width: 100%; }
+  .kpi-strip { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .row-2 { grid-template-columns: 1fr; }
+  .row-3 { grid-template-columns: 1fr; }
+  .row-3 > *:last-child { grid-column: auto; }
+  .lot-role { display: none; }
+  .summary-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .lot-summary-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .kpi-explain-grid { grid-template-columns: 1fr 1fr; }
+  .entry-grid { grid-template-columns: 1fr; }
+  .main { padding: 10px 14px 24px; gap: 10px; }
+  .filterbar { padding: 8px 14px; gap: 10px; }
+  .alert-strip { margin: 10px 14px 0; }
+  .dl-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+@media (max-width: 540px) {
+  .kpi-strip { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+  .kpi-value { font-size: 22px; }
+  .header-logo { height: 36px; }
+  .header-logo-row { padding: 8px 14px 5px; }
+  .day-toggle { display: none; }
+  .live-pill { display: none; }
+  .last-update { display: none; }
+  .summary-grid { grid-template-columns: 1fr; }
+  .lot-summary-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .kpi-explain-grid { grid-template-columns: 1fr; }
+  .mode-grid { grid-template-columns: 1fr; }
+  .filter-label { display: none; }
+  .slot-info { display: none; }
+}
+
+/* ══ SCROLLBAR ═══════════════════════════════════════════ */
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--gold-border); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header-wrap">
+  <div class="header-logo-row">
+    <div class="header-brand">
+      <img class="header-emblem" src="data:image/png;base64,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" alt="Aga Khan Canada Visit">
+      <div class="header-brand-text">
+        <div class="header-title-main">His Highness The Aga Khan</div>
+        <div class="header-title-sub">Canada Visit 2026</div>
+      </div>
+    </div>
+  </div>  </div>
+  <div class="header-controls-row">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div class="header-venue">Enercare Centre &nbsp;&middot;&nbsp; Transportation &amp; Parking Operations</div>
+      <div id="cloud-status" class="cmd-only-section" style="font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--muted2);font-family:var(--font);white-space:nowrap;transition:color .3s;"></div>
+    </div>
+    <div class="header-right">
+      <div class="day-toggle">
+        <button class="day-btn active" onclick="setDay(1,this)">Day 1</button>
+        <button class="day-btn" onclick="setDay(2,this)">Day 2</button>
+      </div>
+      <div class="live-pill"><div class="live-dot"></div>Live</div>
+      <span class="last-update" id="last-update">Last update: &mdash;</span>
+      <div class="mode-badge command" id="mode-badge">
+        <div class="badge-dot"></div>
+        <span id="mode-label">Command centre</span>
+      </div>
+      <button class="switch-btn" onclick="openSwitchModal()">Switch mode</button>
+    </div>
+  </div>
+</header>
+
+<!-- FILTER BAR -->
+<div class="filterbar">
+  <span class="filter-label">Time slot</span>
+  <div class="slot-strip" id="slot-strip"></div>
+  <span class="slot-info" id="slot-info"></span>
+  <button class="reset-btn" onclick="openResetConfirm()">
+    <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.49"/></svg>
+    Reset day
+  </button>
+</div>
+
+<div class="main">
+
+<div class="alert-strip ok" id="alert-strip">
+  <div class="alert-dot-strip"></div>
+  <span id="alert-text">All lots within normal range &mdash; continue monitoring every 10 minutes</span>
+</div>
+
+<div class="kpi-strip" id="kpi-strip"></div>
+
+<div class="row-2">
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">Parking lot occupancy</div><div class="card-sub">Cumulative to selected slot &middot; 2,200 confirmed spaces</div></div>
+      <span class="card-badge" id="overall-badge"></span>
+    </div>
+    <div class="lot-rows" id="lot-rows"></div>
+    <div class="status-legend">
+      <div class="sl-item"><div class="sl-dot" style="background:#639922"></div><span class="sl-text" style="color:#27500A">OK &mdash; under 60%</span></div>
+      <div class="sl-item"><div class="sl-dot" style="background:#BA7517"></div><span class="sl-text" style="color:#633806">Busy &mdash; 60&ndash;84%</span></div>
+      <div class="sl-item"><div class="sl-dot" style="background:#D85A30"></div><span class="sl-text" style="color:#712B13">Critical &mdash; 85&ndash;99%</span></div>
+      <div class="sl-item"><div class="sl-dot" style="background:#E24B4A"></div><span class="sl-text" style="color:#791F1F">Full &mdash; 100%</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><div class="card-title">Arrival mode split</div><div class="card-sub">Cumulative counts vs. KPI targets</div></div></div>
+    <div class="mode-grid" id="mode-grid"></div>
+  </div>
+</div>
+
+<div class="row-3">
+  <div class="card">
+    <div class="card-head"><div><div class="card-title">Inbound trend &mdash; all transport modes</div><div class="card-sub">Per 10-min slot &middot; selected slot highlighted</div></div></div>
+    <div class="legend" id="bar-legend"></div>
+    <div class="chart-wrap" style="height:148px;margin-top:8px"><canvas id="bar-chart"></canvas></div>
+  </div>
+  <div class="card" style="display:flex;flex-direction:column;align-items:center">
+    <div class="card-head" style="width:100%"><div><div class="card-title">Parking utilisation</div><div class="card-sub">By confirmed lot</div></div></div>
+    <div class="chart-wrap" style="height:148px;width:100%"><canvas id="donut-chart"></canvas></div>
+    <div class="legend" id="donut-legend" style="justify-content:center;margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><div class="card-title">Coach tracker</div><div class="card-sub">Target: ~200 per day</div></div></div>
+    <div class="coach-rows" id="coach-rows"></div>
+  </div>
+</div>
+
+<div class="row-3">
+  <div class="card">
+    <div class="card-head"><div><div class="card-title">% Full over time</div><div class="card-sub">Cumulative &mdash; dashed line = 85% critical threshold</div></div></div>
+    <div class="chart-wrap" style="height:138px"><canvas id="line-chart"></canvas></div>
+  </div>
+  <div class="entry-panel cmd-only-section">
+    <div class="entry-title">Command centre entry<span class="entry-slot-badge" id="cur-slot-lbl">&mdash;</span></div>
+    <div class="entry-sub">Enter counts received by volunteer phone call</div>
+    <div class="entry-grid">
+      <div>
+        <div class="entry-group-title">Transport modes</div>
+        <div class="entry-fields" id="mode-inputs"></div>
+      </div>
+      <div>
+        <div class="entry-group-title">Cars per parking lot</div>
+        <div class="entry-fields" id="lot-inputs"></div>
+      </div>
+    </div>
+    <div class="outbound-row" style="flex-direction:column;gap:6px;align-items:flex-start">
+      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);padding-bottom:4px;border-bottom:1px solid var(--gold-border);width:100%">Egress — departures this slot</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <div class="efield"><span class="efield-label" style="color:#7F77DD;width:86px">Taxis leaving</span>
+          <input type="number" class="efield-input" style="border-color:#7F77DD;background:#F3E8FF;color:#3C3489" min="0" step="1" id="inp-taxi-out" value="0" oninput="upd('taxi_out',this.value)">
+          <span class="efield-hint">drop-offs done</span></div>
+        <div class="efield"><span class="efield-label" style="color:#5DCAA5;width:86px">Peds leaving</span>
+          <input type="number" class="efield-input" style="border-color:#5DCAA5;background:#D4F5E9;color:#085041" min="0" step="1" id="inp-ped-out" value="0" oninput="upd('ped_out',this.value)">
+          <span class="efield-hint">via transit</span></div>
+        <div class="efield"><span class="efield-label" style="color:#EF9F27;width:86px">Coaches out</span>
+          <input type="number" class="efield-input" style="border-color:#EF9F27;background:#FFE8C0;color:#633806" min="0" step="1" id="inp-coach-out" value="0" oninput="upd('coach_out',this.value)">
+          <span class="efield-hint">departed</span></div>
+        <div class="efield"><span class="outbound-label" style="width:86px">Cars out</span>
+          <input type="number" class="efield-input" style="border-color:#CC3333;background:#FFF0F0;color:#8B0000" min="0" step="1" id="inp-out" value="0" oninput="upd('out',this.value)">
+          <span class="efield-hint">lots</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><div class="card-title">Recent 10-min log</div><div class="card-sub">Last 10 slots</div></div></div>
+    <div class="tbl-wrap">
+      <table class="dash-tbl">
+        <thead><tr><th>Time</th><th>In:Taxi</th><th>In:Peds</th><th>In:Coach</th><th>Cars in</th><th>Cars out</th><th>%Full</th></tr></thead>
+        <tbody id="log-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- VIEWER REPORT (view-only mode) -->
+<div class="view-only-section" style="padding:0 0 16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:10px 0 14px;border-bottom:1px solid var(--gold-border);margin-bottom:16px;">
+    <div>
+      <div style="font-size:15px;font-weight:600;font-family:'Cormorant Garamond',serif;color:var(--dark2);margin-bottom:3px;">Live Operations Report</div>
+      <div id="viewer-refresh-note" style="font-size:11px;color:var(--muted2);font-family:var(--font);">Connecting to cloud…</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:11px;color:var(--muted2);">Viewing:</span>
+      <div class="day-toggle" style="border:1px solid var(--gold-border);">
+        <button class="day-btn active" onclick="setDay(1,this)" id="viewer-day1-btn">Day 1</button>
+        <button class="day-btn" onclick="setDay(2,this)" id="viewer-day2-btn">Day 2</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="report-section">
+    <div class="report-heading">Overall day summary</div>
+    <div class="summary-grid" id="viewer-summary-cards"></div>
+  </div>
+  <div class="report-section">
+    <div class="report-heading">Parking lot results</div>
+    <div class="lot-summary-grid" id="viewer-lot-cards"></div>
+  </div>
+  <div class="report-section">
+    <div class="report-heading">Full 10-minute timeline</div>
+    <div class="timeline-tbl-wrap">
+      <table class="timeline-tbl">
+        <thead><tr><th>Time</th><th>Taxis</th><th>Pedestrians</th><th>Coaches</th><th>Lot 850</th><th>Lot 853</th><th>Lot 856</th><th>Lot 859</th><th>Cars in</th><th>Cars out</th><th>Net</th><th>% Full</th><th>Status</th></tr></thead>
+        <tbody id="viewer-timeline-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- CMD-ONLY: Download button + KPI guide (hidden in view mode) -->
+<div class="cmd-only-section" style="margin-top:4px;">
+  <div class="dl-row" style="margin-bottom:0;padding:12px 0 4px;border-top:1px solid var(--gold-border);">
+    <div style="font-size:12px;color:var(--muted)">
+      <strong style="color:var(--dark2);font-family:var(--serif);font-size:14px">End-of-day report</strong>
+      &nbsp;&middot;&nbsp; Download all data entered during the event as a CSV file
+    </div>
+    <button class="dl-btn" onclick="downloadReport()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download full report (CSV)
+    </button>
+  </div>
+</div>
+
+<div class="cmd-only-section">
+  <div style="margin-top:10px;">
+    <div class="report-heading">What each KPI means &mdash; plain language guide</div>
+    <div class="kpi-explain-grid" id="viewer-kpi-guide"></div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- PIN MODAL -->
+<div class="modal-overlay" id="pin-modal">
+  <div class="modal-box">
+    <div class="modal-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+    <div class="modal-title">Command centre access</div>
+    <div class="modal-sub">Enter the 4-digit PIN to enable data entry.</div>
+    <input type="password" class="modal-input" id="pin-input" maxlength="4" placeholder="&middot;&middot;&middot;&middot;" oninput="pinInput(this)">
+    <div class="modal-error" id="pin-error"></div>
+    <button class="modal-btn" onclick="submitPin()">Unlock</button>
+    <button class="modal-cancel" onclick="closePinModal()">Cancel &mdash; stay in view mode</button>
+  </div>
+</div>
+
+<!-- RESET CONFIRM MODAL -->
+<div class="modal-overlay" id="reset-modal">
+  <div class="confirm-box">
+    <div class="confirm-icon"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.49"/></svg></div>
+    <div class="confirm-title">Reset all data for Day <span id="reset-day-num">1</span>?</div>
+    <div class="confirm-sub">This will clear every count entered for the current day. This cannot be undone.</div>
+    <div class="confirm-btns">
+      <button class="confirm-cancel-btn" onclick="closeResetModal()">Cancel</button>
+      <button class="confirm-reset-btn" onclick="confirmReset()">Reset day data</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const LOTS = [
+  {name:"Lot 850", short:"850", cap:1000, color:"#185FA5", role:"Leadership/MCV"},
+  {name:"Lot 853", short:"853", cap:300,  color:"#0F6E56", role:"Accessibility"},
+  {name:"Lot 856", short:"856", cap:600,  color:"#854F0B", role:"Jamat"},
+  {name:"Lot 859", short:"859", cap:300,  color:"#A32D2D", role:"Jamat"},
+];
+const TOTAL_CAP = 2200;
+const COACH_TARGET = 200;
+
+/* ── SLOTS 09:00–17:00 every 10 min ── */
+function genSlots() {
+  const out = []; let h=9, m=0;
+  while (h < 17) {
+    const nh = m+10>=60 ? h+1 : h, nm = (m+10)%60;
+    if (nh > 17) break;
+    const fmt = (hh, mm) => { const h2 = hh>12?hh-12:hh; return `${h2}:${String(mm).padStart(2,'0')}${hh<12?'a':'p'}`; };
+    out.push(fmt(h,m));
+    h=nh; m=nm;
+  }
+  return out;
+}
+const SLOTS = genSlots();
+
+/* ── DATA STORE ── */
+const data = {1:{}, 2:{}};
+[1,2].forEach(d => SLOTS.forEach((_,si) => {
+  data[d][si] = {taxi:0, ped:0, coach:0, taxi_out:0, ped_out:0, coach_out:0, out:0, cars:{}};
+  LOTS.forEach(l => { data[d][si].cars[l.name] = 0; });
+}));
+
+/* ── SEED DAY 1 DEMO DATA ── */
+const seeds = {
+  taxi:  [5,8,12,15,10,8,14,18,22,25,20,16,12,10,8,6,5,4,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ped:   [10,15,20,25,18,14,22,30,38,42,35,28,22,18,14,10,8,6,4,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  coach: [2,3,5,6,4,3,5,7,10,12,10,8,6,5,4,3,2,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  '850': [20,25,35,40,28,22,30,38,48,55,48,40,32,26,20,16,12,10,7,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  '853': [5,6,8,10,7,6,8,10,13,15,13,11,8,7,5,4,3,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  '856': [8,10,14,18,12,9,13,17,22,25,22,18,14,11,8,6,5,4,3,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  '859': [5,6,8,10,7,5,8,10,13,14,12,10,8,6,5,4,3,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  out:   [3,4,6,8,5,4,7,9,11,13,11,9,7,5,4,3,2,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+};
+SLOTS.forEach((_,si) => {
+  data[1][si].taxi  = seeds.taxi[si]||0;
+  data[1][si].ped   = seeds.ped[si]||0;
+  data[1][si].coach = seeds.coach[si]||0;
+  data[1][si].out   = seeds.out[si]||0;
+  data[1][si].cars['Lot 850'] = seeds['850'][si]||0;
+  data[1][si].cars['Lot 853'] = seeds['853'][si]||0;
+  data[1][si].cars['Lot 856'] = seeds['856'][si]||0;
+  data[1][si].cars['Lot 859'] = seeds['859'][si]||0;
+});
+
+let curDay = 1, curSlot = 17;
+let barChart = null, donutChart = null, lineChart = null;
+
+/* ── HELPERS ── */
+function cumLot(day, lot, upTo) {
+  let t = 0;
+  for (let si=0; si<=upTo; si++) t += data[day][si].cars[lot.name]||0;
+  return Math.max(0, Math.min(lot.cap, t));
+}
+function totOcc(day, upTo) { return LOTS.reduce((s,l) => s + cumLot(day,l,upTo), 0); }
+function cumField(day, field, upTo) { let t=0; for (let si=0;si<=upTo;si++) t+=data[day][si][field]||0; return t; }
+function statusOf(pct) {
+  if (pct >= 1)    return {l:'Full',     c:'#E24B4A', bg:'#FCEBEB', fg:'#791F1F'};
+  if (pct >= 0.85) return {l:'Critical', c:'#D85A30', bg:'#FAECE7', fg:'#712B13'};
+  if (pct >= 0.6)  return {l:'Busy',     c:'#BA7517', bg:'#FAEEDA', fg:'#633806'};
+  return                  {l:'OK',       c:'#639922', bg:'#EAF3DE', fg:'#27500A'};
+}
+function etf(rem, rate) {
+  if (rate <= 0) return '—';
+  const m = Math.round(rem/rate*10);
+  if (m <= 0) return 'Full';
+  const h = Math.floor(m/60), r = m%60;
+  return h > 0 ? `${h}h${r}m` : `${r}m`;
+}
+function r(n) { return Math.round(n); }
+
+/* ── SLOT STRIP ── */
+function buildSlotStrip() {
+  const strip = document.getElementById('slot-strip');
+  strip.innerHTML = '';
+  SLOTS.forEach((s,si) => {
+    const hasDat = LOTS.some(l => data[curDay][si].cars[l.name] > 0)
+      || data[curDay][si].taxi > 0 || data[curDay][si].ped > 0 || data[curDay][si].coach > 0;
+    const b = document.createElement('button');
+    b.className = 'sbt' + (si===curSlot ? ' active' : hasDat ? ' has-data' : '');
+    b.textContent = s;
+    b.onclick = () => { curSlot = si; refresh(); };
+    strip.appendChild(b);
+  });
+  document.getElementById('slot-info').textContent = `Slot ${curSlot+1}/${SLOTS.length}`;
+  setTimeout(() => { const a = strip.querySelector('.active'); if (a) a.scrollIntoView({inline:'center',behavior:'smooth'}); }, 60);
+}
+
+/* ── ALERT ── */
+function buildAlert() {
+  const crit   = LOTS.filter(l => cumLot(curDay,l,curSlot)/l.cap >= 0.85);
+  const el     = document.getElementById('alert-strip');
+  const txt    = document.getElementById('alert-text');
+  const netIn  = cumField(curDay,'taxi',curSlot)+cumField(curDay,'ped',curSlot)+cumField(curDay,'coach',curSlot)*45+totOcc(curDay,curSlot);
+  const netOut = cumField(curDay,'taxi_out',curSlot)+cumField(curDay,'ped_out',curSlot)+cumField(curDay,'coach_out',curSlot)*45+cumField(curDay,'out',curSlot);
+  const net    = Math.max(netIn-netOut,0);
+  const flow   = `Net on site: ~${net.toLocaleString()} · In ${netIn.toLocaleString()} · Out ${netOut.toLocaleString()}`;
+  if (crit.length > 0) {
+    el.className = 'alert-strip critical';
+    txt.innerHTML = `<strong>CRITICAL:</strong> ${crit.map(l=>l.name).join(', ')} at 85%+ — redirect Murid/Jamat now &nbsp;|&nbsp; ${flow}`;
+  } else {
+    el.className = 'alert-strip ok';
+    txt.textContent = `All lots OK — ${flow}`;
+  }
+}
+
+/* ── KPI STRIP ── */
+function buildKPIs() {
+  const occ      = totOcc(curDay, curSlot);
+  const pct      = occ/TOTAL_CAP;
+  const rem      = TOTAL_CAP - occ;
+  const st       = statusOf(pct);
+  const thisIn   = LOTS.reduce((s,l)=>s+(data[curDay][curSlot].cars[l.name]||0),0);
+  const cumTaxi  = cumField(curDay,'taxi',curSlot);
+  const cumPed   = cumField(curDay,'ped',curSlot);
+  const cumCoach = cumField(curDay,'coach',curSlot);
+  const cumTaxiO = cumField(curDay,'taxi_out',curSlot);
+  const cumPedO  = cumField(curDay,'ped_out',curSlot);
+  const cumCoachO= cumField(curDay,'coach_out',curSlot);
+  const cumCarsO = cumField(curDay,'out',curSlot);
+  const strip = document.getElementById('kpi-strip');
+  strip.innerHTML = '';
+
+  function addLabel(text) {
+    const l=document.createElement('div'); l.className='kpi-row-label'; l.textContent=text; strip.appendChild(l);
+  }
+  function addCard(lbl,val,sub,tgt,tgtBg,tgtFg,border,valColor) {
+    const d=document.createElement('div'); d.className='kpi-card'; d.style.borderTopColor=border;
+    d.innerHTML=`<div class="kpi-label">${lbl}</div>
+      <div class="kpi-value" style="color:${valColor||'var(--dark)'}">${val.toLocaleString()}</div>
+      <div class="kpi-sub">${sub}</div>
+      <span class="kpi-target" style="background:${tgtBg};color:${tgtFg}">${tgt}</span>`;
+    strip.appendChild(d);
+  }
+
+  addLabel('Ingress — arrivals');
+  addCard('Taxis arriving',   cumTaxi,  `${data[curDay][curSlot].taxi||0} this slot`,   'Target: 4–7%',   '#EEEDFE','#3C3489','#534AB7','var(--gold-deep)');
+  addCard('Pedestrians in',   cumPed,   `${data[curDay][curSlot].ped||0} this slot`,    'Target: 10–15%', '#E1F5EE','#085041','#0F6E56','var(--gold-deep)');
+  addCard('Coaches arrived',  cumCoach, `${Math.max(COACH_TARGET-cumCoach,0)} remaining`,'Target: 200/day','#FFF2CC','#633806','#854F0B','var(--gold-deep)');
+  addCard('Cars parked',      r(occ),   `${r(pct*100)}% of 2,200 spaces`,              'Target: 30–40%', '#E6F1FB','#0C447C','#2E5BA8','var(--gold-deep)');
+
+  addLabel('Egress — departures');
+  addCard('Taxis departing',  cumTaxiO, `${data[curDay][curSlot].taxi_out||0} this slot`,'Drop-off turnover','#F3E8FF','#3C3489','#7F77DD','var(--mid)');
+  addCard('Pedestrians out',  cumPedO,  `${data[curDay][curSlot].ped_out||0} this slot`, 'Transit egress',   '#D4F5E9','#085041','#5DCAA5','var(--mid)');
+  addCard('Coaches departed', cumCoachO,`${data[curDay][curSlot].coach_out||0} this slot`,'Coach turnaround', '#FFE8C0','#633806','#EF9F27','var(--mid)');
+  addCard('Cars exited',      cumCarsO, `${r(rem)} spaces free`,                         st.l,              st.bg,   st.fg,   st.c,    'var(--mid)');
+}
+
+
+/* ── LOT ROWS ── */
+function buildLotRows() {
+  const occ = totOcc(curDay, curSlot);
+  const pct = occ/TOTAL_CAP;
+  const st = statusOf(pct);
+  const badge = document.getElementById('overall-badge');
+  badge.textContent = `${r(pct*100)}% overall`;
+  badge.style.background = st.bg; badge.style.color = st.fg;
+
+  const c = document.getElementById('lot-rows');
+  c.innerHTML = '';
+  LOTS.forEach(lot => {
+    const lo = cumLot(curDay, lot, curSlot);
+    const lp = lo/lot.cap;
+    const lst = statusOf(lp);
+    const rate = data[curDay][curSlot].cars[lot.name]||0;
+    const div = document.createElement('div');
+    div.className = 'lot-row';
+    div.innerHTML = `
+      <div class="lot-name">${lot.short}</div>
+      <div class="lot-role">${lot.role}</div>
+      <div class="lot-track"><div class="lot-fill" style="width:${Math.min(lp*100,100).toFixed(1)}%;background:${lst.c}"></div></div>
+      <div class="lot-pct" style="color:${lst.c}">${r(lp*100)}%</div>
+      <div class="lot-etf" title="Est. time to full">${etf(lot.cap-lo, rate)}</div>
+      <div class="lot-badge" style="background:${lst.bg};color:${lst.fg}">${lst.l}</div>`;
+    c.appendChild(div);
+  });
+}
+
+/* ── MODE GRID ── */
+function buildModeGrid() {
+  const occ = totOcc(curDay, curSlot);
+  const cumTaxi  = cumField(curDay,'taxi',curSlot);
+  const cumPed   = cumField(curDay,'ped',curSlot);
+  const cumCoach = cumField(curDay,'coach',curSlot);
+  const modes = [
+    { lbl:'Taxis / rideshare', tgt:'Target: 4–7% of arrivals', val:cumTaxi,  pct:r(cumTaxi/(Math.max(cumTaxi+cumPed+occ,1))*100),   clr:'#EEEDFE', fc:'#3C3489' },
+    { lbl:'Pedestrians (TTC/GO)', tgt:'Target: 10–15%',        val:cumPed,   pct:r(cumPed/(Math.max(cumTaxi+cumPed+occ,1))*100),    clr:'#E1F5EE', fc:'#085041' },
+    { lbl:'Coaches',           tgt:'Target: 100–170/day',      val:cumCoach, pct:r(cumCoach/COACH_TARGET*100),                       clr:'#FFF2CC', fc:'#633806' },
+    { lbl:'Cars (self-pay)',   tgt:'Target: 30–40%',           val:occ,      pct:r(occ/TOTAL_CAP*100),                              clr:'#E6F1FB', fc:'#0C447C' },
+  ];
+  const g = document.getElementById('mode-grid');
+  g.innerHTML = '';
+  modes.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'mode-card';
+    div.style.background = m.clr;
+    div.innerHTML = `
+      <div><div class="mode-name" style="color:${m.fc}">${m.lbl}</div><div class="mode-tgt" style="color:${m.fc}">${m.tgt}</div></div>
+      <div><div class="mode-val" style="color:${m.fc}">${m.val.toLocaleString()}</div><span class="mode-pct" style="color:${m.fc}">${m.pct}%</span></div>`;
+    g.appendChild(div);
+  });
+}
+
+/* ── CHARTS ── */
+function buildCharts() {
+  const labels = SLOTS;
+  const taxi  = SLOTS.map((_,si) => data[curDay][si].taxi||0);
+  const ped   = SLOTS.map((_,si) => data[curDay][si].ped||0);
+  const coach = SLOTS.map((_,si) => data[curDay][si].coach||0);
+  const cars  = SLOTS.map((_,si) => LOTS.reduce((s,l) => s+(data[curDay][si].cars[l.name]||0), 0));
+
+  if (barChart) barChart.destroy();
+  barChart = new Chart(document.getElementById('bar-chart'), {
+    type: 'bar',
+    data: { labels, datasets: [
+      { label:'Taxis',       data:taxi,  backgroundColor: labels.map((_,i) => i===curSlot ? '#534AB7' : '#CECBF6'), borderRadius:2 },
+      { label:'Pedestrians', data:ped,   backgroundColor: labels.map((_,i) => i===curSlot ? '#1D9E75' : '#9FE1CB'), borderRadius:2 },
+      { label:'Coaches',     data:coach, backgroundColor: labels.map((_,i) => i===curSlot ? '#BA7517' : '#FAC775'), borderRadius:2 },
+      { label:'Cars',        data:cars,  backgroundColor: labels.map((_,i) => i===curSlot ? '#185FA5' : '#B5D4F4'), borderRadius:2 },
+    ]},
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{title:([i]) => SLOTS[i.dataIndex]}}},
+      scales:{
+        x:{stacked:true, ticks:{font:{size:9,family:'DM Mono'},color:'#888780',maxRotation:55,autoSkip:true,maxTicksLimit:16}, grid:{display:false}},
+        y:{stacked:true, ticks:{font:{size:9,family:'DM Mono'},color:'#888780'}, grid:{color:'rgba(0,0,0,0.03)'}}
+      }}
+  });
+
+  document.getElementById('bar-legend').innerHTML = [
+    ['#534AB7','Taxis'],['#1D9E75','Pedestrians'],['#BA7517','Coaches'],['#185FA5','Cars']
+  ].map(([c,l]) => `<span class="leg-item"><span class="leg-sq" style="background:${c}"></span>${l}</span>`).join('');
+
+  const occs = LOTS.map(l => cumLot(curDay, l, curSlot));
+  const rem  = Math.max(TOTAL_CAP - occs.reduce((a,b)=>a+b,0), 0);
+  const pctOv= occs.reduce((a,b)=>a+b,0)/TOTAL_CAP;
+  const stOv = statusOf(pctOv);
+
+  if (donutChart) donutChart.destroy();
+  donutChart = new Chart(document.getElementById('donut-chart'), {
+    type: 'doughnut',
+    data: {
+      labels: [...LOTS.map(l=>l.short), 'Available'],
+      datasets:[{ data:[...occs, rem], backgroundColor:[...LOTS.map(l=>l.color),'#D3D1C7'], borderWidth:0, hoverOffset:3 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'70%',
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw.toLocaleString()}`}}}},
+    plugins:[{id:'ctr', afterDraw(ch) {
+      const {ctx, chartArea:{top,bottom,left,right}} = ch;
+      const cx=(left+right)/2, cy=(top+bottom)/2;
+      ctx.save();
+      ctx.fillStyle=stOv.c; ctx.font='600 22px DM Mono'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(r(pctOv*100)+'%', cx, cy-8);
+      ctx.fillStyle='#888780'; ctx.font='10px DM Sans';
+      ctx.fillText(occs.reduce((a,b)=>a+b,0).toLocaleString()+' cars', cx, cy+12);
+      ctx.restore();
+    }}]
+  });
+
+  document.getElementById('donut-legend').innerHTML =
+    LOTS.map((l,i) => `<span class="leg-item"><span class="leg-sq" style="background:${l.color}"></span>${l.short} ${occs[i]}</span>`).join('') +
+    `<span class="leg-item"><span class="leg-sq" style="background:#D3D1C7"></span>Free ${rem}</span>`;
+
+  let cumCars = 0, cumOut = 0;
+  const pctLine = SLOTS.map((_,si) => {
+    cumCars += LOTS.reduce((s,l) => s+(data[curDay][si].cars[l.name]||0), 0);
+    cumOut  += data[curDay][si].out||0;
+    return Math.max(0, Math.min(100, r(Math.max(cumCars-cumOut,0)/TOTAL_CAP*100)));
+  });
+
+  if (lineChart) lineChart.destroy();
+  lineChart = new Chart(document.getElementById('line-chart'), {
+    type:'line',
+    data:{ labels, datasets:[
+      { label:'% Full', data:pctLine, borderColor:'#185FA5', backgroundColor:'rgba(24,95,165,0.06)', borderWidth:2, pointRadius:0, tension:0.3, fill:true },
+      { label:'85% critical', data:Array(SLOTS.length).fill(85), borderColor:'#D85A30', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false },
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{title:([i])=>SLOTS[i.dataIndex], label:ctx=>ctx.datasetIndex===0?`${ctx.raw}% full`:''}}},
+      scales:{
+        x:{ticks:{font:{size:9,family:'DM Mono'},color:'#888780',maxRotation:55,autoSkip:true,maxTicksLimit:16},grid:{display:false}},
+        y:{min:0,max:100, ticks:{font:{size:9,family:'DM Mono'},color:'#888780',callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.03)'}}
+      }}
+  });
+}
+
+/* ── COACH TRACKER ── */
+function buildCoach() {
+  const arrived  = cumField(curDay,'coach',curSlot);
+  const seatsEst = Math.min(r(arrived * 0.91), 95);
+  const rows = [
+    { lbl:'Coaches arrived',   val:`${arrived} / ${COACH_TARGET}`, pct:r(arrived/COACH_TARGET*100), c:'#BA7517', meta:`${Math.max(COACH_TARGET-arrived,0)} remaining` },
+    { lbl:'Seat fill rate',    val:`${seatsEst}%`,                  pct:seatsEst,                   c:'#0F6E56', meta:'Target: 85–95%' },
+    { lbl:'Coach utilisation', val:`${r(arrived/COACH_TARGET*100)}%`, pct:r(arrived/COACH_TARGET*100), c:'#185FA5', meta:'vs 200 target' },
+  ];
+  const c = document.getElementById('coach-rows');
+  c.innerHTML = '';
+  rows.forEach(ro => {
+    const div = document.createElement('div');
+    div.className = 'coach-row';
+    div.innerHTML = `
+      <div class="coach-header"><span class="coach-lbl">${ro.lbl}</span><span class="coach-val">${ro.val}</span></div>
+      <div class="coach-track"><div class="coach-fill" style="width:${Math.min(ro.pct,100)}%;background:${ro.c}"></div></div>
+      <div class="coach-meta">${ro.meta}</div>`;
+    c.appendChild(div);
+  });
+}
+
+/* ── LOG TABLE ── */
+function buildLog() {
+  const tbody = document.getElementById('log-body');
+  tbody.innerHTML = '';
+  const start = Math.max(0, curSlot-9);
+  let cumC=0, cumO=0;
+  for (let si=0; si<=curSlot; si++) {
+    cumC += LOTS.reduce((s,l) => s+(data[curDay][si].cars[l.name]||0), 0);
+    cumO += data[curDay][si].out||0;
+    if (si >= start) {
+      const cars = LOTS.reduce((s,l) => s+(data[curDay][si].cars[l.name]||0), 0);
+      const pct  = Math.max(0, Math.min(100, r(Math.max(cumC-cumO,0)/TOTAL_CAP*100)));
+      const st   = statusOf(pct/100);
+      const tr = document.createElement('tr');
+      if (si === curSlot) tr.className = 'active-row';
+      tr.innerHTML = `
+        <td>${SLOTS[si]}</td>
+        <td>${data[curDay][si].taxi||0}</td>
+        <td>${data[curDay][si].ped||0}</td>
+        <td>${data[curDay][si].coach||0}</td>
+        <td style="font-weight:600;color:var(--gold-deep)">${cars}</td>
+        <td style="color:#8B0000">${data[curDay][si].out||0}</td>
+        <td class="pct-cell" style="color:${st.c}">${pct}%</td>`;
+      tbody.appendChild(tr);
+    }
+  }
+}
+
+/* ── ENTRY INPUTS ── */
+function buildInputs() {
+  document.getElementById('cur-slot-lbl').textContent = SLOTS[curSlot];
+  const modeInputs = document.getElementById('mode-inputs');
+  modeInputs.innerHTML = '';
+  const modes = [
+    {field:'taxi',  lbl:'Taxis',        color:'#534AB7', bg:'#F3E8FF', hint:'inbound'},
+    {field:'ped',   lbl:'Pedestrians',  color:'#0F6E56', bg:'#E8F5E9', hint:'Exhibition Loop'},
+    {field:'coach', lbl:'Coaches',      color:'#854F0B', bg:'#FFF8E6', hint:'inbound'},
+  ];
+  modes.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'efield';
+    div.innerHTML = `
+      <label class="efield-label" style="color:${m.color}">${m.lbl}</label>
+      <input type="number" class="efield-input" style="border-color:${m.color};background:${m.bg};color:${m.color}"
+        min="0" step="1" value="${data[curDay][curSlot][m.field]||0}" oninput="upd('${m.field}',this.value)">
+      <span class="efield-hint">${m.hint}</span>`;
+    modeInputs.appendChild(div);
+  });
+
+  const lotInputs = document.getElementById('lot-inputs');
+  lotInputs.innerHTML = '';
+  LOTS.forEach(lot => {
+    const div = document.createElement('div');
+    div.className = 'efield';
+    div.innerHTML = `
+      <label class="efield-label" style="color:#185FA5">${lot.short}</label>
+      <input type="number" class="efield-input" style="border-color:#2E5BA8;background:#EBF5FF;color:#00008B"
+        min="0" step="1" value="${data[curDay][curSlot].cars[lot.name]||0}" oninput="updCar('${lot.name}',this.value)">
+      <span class="efield-hint">in</span>`;
+    lotInputs.appendChild(div);
+  });
+
+  document.getElementById('inp-out').value = data[curDay][curSlot].out||0;
+  const _tOut=document.getElementById('inp-taxi-out');
+  const _pOut=document.getElementById('inp-ped-out');
+  const _cOut=document.getElementById('inp-coach-out');
+  if(_tOut) _tOut.value=data[curDay][curSlot].taxi_out||0;
+  if(_pOut) _pOut.value=data[curDay][curSlot].ped_out||0;
+  if(_cOut) _cOut.value=data[curDay][curSlot].coach_out||0;
+}
+
+/* ── UPDATE FNS ── */
+function upd(field, val) {
+  data[curDay][curSlot][field] = Math.max(0, parseInt(val)||0);
+  updateTime(); saveData(); refresh();
+}
+function updCar(name, val) {
+  data[curDay][curSlot].cars[name] = Math.max(0, parseInt(val)||0);
+  updateTime(); saveData(); refresh();
+}
+function updateSlotStrip() {
+  document.querySelectorAll('.sbt').forEach((b,si) => {
+    const hasDat = LOTS.some(l=>data[curDay][si].cars[l.name]>0) || data[curDay][si].taxi>0 || data[curDay][si].ped>0 || data[curDay][si].coach>0;
+    b.className = 'sbt' + (si===curSlot ? ' active' : hasDat ? ' has-data' : '');
+  });
+  document.getElementById('slot-info').textContent = `Slot ${curSlot+1}/${SLOTS.length}`;
+}
+function updateTime() {
+  document.getElementById('last-update').textContent = 'Last update: ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+function setDay(d, el) {
+  curDay = d;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  saveData(); refresh();
+}
+function refresh() {
+  updateSlotStrip();
+  buildAlert();
+  buildKPIs();
+  buildLotRows();
+  buildModeGrid();
+  buildCharts();
+  buildCoach();
+  buildLog();
+  buildInputs();
+  buildViewerKPIGuide();
+}
+
+
+/* ── CLOUD STORAGE — Google Sheets via Apps Script ──────────
+   Command centre: saves to cloud on every data entry
+   Viewers: fetches from cloud every 30 s (auto-refresh)
+   Works across all devices on any network
+   ─────────────────────────────────────────────────────────── */
+const CLOUD_URL = 'https://script.google.com/macros/s/AKfycbwf9jIifh_v-Y5NChj8U2c8Jgroe1cv5U4jT81r5n2Ri1v497ej3rSCnNwYq4hUoISNWQ/exec';
+let _saveTimer   = null;   // debounce — avoids hammering on rapid input
+let _saveStatus  = 'idle'; // 'idle' | 'saving' | 'saved' | 'error'
+let _lastSaveHash = '';    // skip identical saves
+
+function _applyPayload(saved) {
+  if (!saved || !saved.data) return;
+  [1,2].forEach(d => {
+    SLOTS.forEach((_,si) => {
+      if (saved.data[d] && saved.data[d][si]) {
+        const s = saved.data[d][si];
+        data[d][si].taxi      = s.taxi||0;
+        data[d][si].ped       = s.ped||0;
+        data[d][si].coach     = s.coach||0;
+        data[d][si].taxi_out  = s.taxi_out||0;
+        data[d][si].ped_out   = s.ped_out||0;
+        data[d][si].coach_out = s.coach_out||0;
+        data[d][si].out       = s.out||0;
+        LOTS.forEach(l => { data[d][si].cars[l.name] = (s.cars && s.cars[l.name])||0; });
+      }
+    });
+  });
+  if (saved.curDay)  curDay  = saved.curDay;
+  if (typeof saved.curSlot === 'number') curSlot = saved.curSlot;
+}
+
+function _setSaveStatus(status, msg) {
+  _saveStatus = status;
+  const el = document.getElementById('cloud-status');
+  if (!el) return;
+  const icons = { saving:'⏳', saved:'✅', error:'❌', idle:'' };
+  const colors = { saving:'var(--muted2)', saved:'#27500A', error:'#8B0000', idle:'var(--muted2)' };
+  el.textContent = (icons[status]||'') + ' ' + (msg||'');
+  el.style.color = colors[status]||'var(--muted2)';
+}
+
+/* Debounced save — fires 800ms after last keystroke */
+function saveData() {
+  clearTimeout(_saveTimer);
+  _setSaveStatus('saving', 'Saving…');
+  _saveTimer = setTimeout(_doSave, 800);
+}
+
+function _doSave() {
+  const payload = JSON.stringify({data, curDay, curSlot});
+  if (payload === _lastSaveHash) { _setSaveStatus('saved', 'All changes saved'); return; }
+  fetch(CLOUD_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain'},
+    body: payload
+  })
+  .then(() => {
+    _lastSaveHash = payload;
+    _setSaveStatus('saved', 'Saved to cloud · ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+    /* Also keep localStorage as offline fallback */
+    try { localStorage.setItem('enercare_backup', payload); } catch(e) {}
+  })
+  .catch(err => {
+    _setSaveStatus('error', 'Cloud save failed — data kept locally');
+    try { localStorage.setItem('enercare_backup', JSON.stringify({data, curDay, curSlot})); } catch(e) {}
+  });
+}
+
+/* Load from cloud — with localStorage fallback if cloud unreachable */
+function loadData() {
+  _setSaveStatus('saving', 'Loading from cloud…');
+  fetch(CLOUD_URL + '?t=' + Date.now(), {mode: 'cors'})
+    .then(r => r.text())
+    .then(text => {
+      if (!text || text.trim() === '' || text.trim() === '{}') {
+        _tryLocalFallback();
+        return;
+      }
+      const saved = JSON.parse(text);
+      _applyPayload(saved);
+      _lastSaveHash = JSON.stringify({data, curDay, curSlot});
+      _setSaveStatus('saved', 'Loaded from cloud · ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+      buildSlotStrip();
+      refresh();
+    })
+    .catch(() => {
+      _tryLocalFallback();
+    });
+}
+
+function _tryLocalFallback() {
+  try {
+    const raw = localStorage.getItem('enercare_backup');
+    if (raw) {
+      const saved = JSON.parse(raw);
+      _applyPayload(saved);
+      _setSaveStatus('error', 'Cloud unavailable — loaded local backup');
+    } else {
+      _setSaveStatus('idle', 'No saved data found');
+    }
+  } catch(e) {
+    _setSaveStatus('error', 'Could not load data');
+  }
+  buildSlotStrip();
+  refresh();
+}
+
+/* Viewer cloud fetch — called every 30 s */
+function fetchLatestForViewer() {
+  fetch(CLOUD_URL + '?t=' + Date.now(), {mode:'cors'})
+    .then(r => r.text())
+    .then(text => {
+      if (!text || text.trim() === '' || text.trim() === '{}') return;
+      const saved = JSON.parse(text);
+      _applyPayload(saved);
+      refresh();
+      buildViewerReport();
+      const el = document.getElementById('viewer-refresh-note');
+      if (el) el.textContent = 'Live — last updated: ' + new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    })
+    .catch(() => {
+      const el = document.getElementById('viewer-refresh-note');
+      if (el) el.textContent = 'Refresh failed — retrying in 30s';
+    });
+}
+
+buildSlotStrip();
+loadData();
+
+/* ── MODE MANAGEMENT ── */
+const CMD_PIN = '1302';  // Change this PIN before event day
+let isCommandMode = true;  // Default: command centre mode
+
+
+/* ── VIEWER AUTO-REFRESH (30s) ─────────────────────────── */
+let _viewerRefreshTimer = null;
+function startViewerRefresh() {
+  stopViewerRefresh();
+  fetchLatestForViewer(); // immediate fetch on mode switch
+  _viewerRefreshTimer = setInterval(() => {
+    if (!isCommandMode) fetchLatestForViewer();
+  }, 30000);
+}
+function stopViewerRefresh() {
+  if (_viewerRefreshTimer) { clearInterval(_viewerRefreshTimer); _viewerRefreshTimer=null; }
+}
+
+function applyMode() {
+  const body = document.body;
+  const badge = document.getElementById('mode-badge');
+  const label = document.getElementById('mode-label');
+  if (isCommandMode) {
+    body.classList.remove('view-mode');
+    badge.className = 'mode-badge command';
+    label.textContent = 'Command centre';
+    stopViewerRefresh();
+  } else {
+    body.classList.add('view-mode');
+    badge.className = 'mode-badge view';
+    label.textContent = 'View only';
+    startViewerRefresh();
+  }
+}
+
+function openSwitchModal() {
+  if (isCommandMode) {
+    isCommandMode = false;
+    (window._applyModeHooked || applyMode)();
+  } else {
+    // switching TO command mode — need PIN
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-error').textContent = '';
+    document.getElementById('pin-input').classList.remove('error');
+    document.getElementById('pin-modal').classList.add('open');
+    setTimeout(() => document.getElementById('pin-input').focus(), 50);
+  }
+}
+
+function pinInput(el) {
+  el.classList.remove('error');
+  document.getElementById('pin-error').textContent = '';
+  if (el.value.length === 4) submitPin();
+}
+
+function submitPin() {
+  const val = document.getElementById('pin-input').value;
+  if (val === CMD_PIN) {
+    isCommandMode = true;
+    (window._applyModeHooked || applyMode)();
+    closePinModal();
+  } else {
+    const inp = document.getElementById('pin-input');
+    inp.classList.add('error');
+    document.getElementById('pin-error').textContent = 'Incorrect PIN. Try again.';
+    inp.value = '';
+    inp.focus();
+  }
+}
+
+function closePinModal() {
+  document.getElementById('pin-modal').classList.remove('open');
+}
+
+// Close modal on overlay click
+document.getElementById('pin-modal').addEventListener('click', function(e) {
+  if (e.target === this) closePinModal();
+});
+
+// Enter key submits PIN
+document.getElementById('pin-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitPin();
+});
+
+/* ── RESET MANAGEMENT ── */
+function openResetConfirm() {
+  document.getElementById('reset-day-num').textContent = curDay;
+  document.getElementById('reset-modal').classList.add('open');
+}
+
+function closeResetModal() {
+  document.getElementById('reset-modal').classList.remove('open');
+}
+
+function confirmReset() {
+  // Reset all data for current day
+  SLOTS.forEach((_,si) => {
+    data[curDay][si] = {taxi:0, ped:0, coach:0, out:0, cars:{}};
+    LOTS.forEach(l => { data[curDay][si].cars[l.name] = 0; });
+  });
+  closeResetModal();
+  updateTime(); saveData(); refresh();
+}
+
+// Close reset modal on overlay click
+document.getElementById('reset-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeResetModal();
+});
+
+// Start in command mode
+applyMode();
+
+/* ══════════════════════════════════════════════════
+   VIEWER REPORT FUNCTIONS
+   ══════════════════════════════════════════════ */
+
+function buildViewerReport() {
+  buildViewerSummaryCards();
+  buildViewerLotCards();
+  buildViewerTimeline();
+  buildViewerKPIGuide();
+}
+
+function buildViewerSummaryCards() {
+  const totalTaxi  = cumField(curDay,'taxi', SLOTS.length-1);
+  const totalPed   = cumField(curDay,'ped',  SLOTS.length-1);
+  const totalCoach = cumField(curDay,'coach',SLOTS.length-1);
+  const totalCarsIn= SLOTS.reduce((s,_,si)=>s+LOTS.reduce((a,l)=>a+(data[curDay][si].cars[l.name]||0),0),0);
+  const totalOut   = cumField(curDay,'out',  SLOTS.length-1);
+  const peakPct    = Math.max(...SLOTS.map((_,si)=>{
+    let cum=0; for(let x=0;x<=si;x++) cum+=LOTS.reduce((a,l)=>a+(data[curDay][x].cars[l.name]||0),0)-(data[curDay][x].out||0);
+    return Math.max(0,Math.min(100,r(cum/TOTAL_CAP*100)));
+  }));
+  const st = statusOf(peakPct/100);
+
+  const cards = [
+    { lbl:'Total taxis / rideshare', val:totalTaxi,  sub:`Inbound across full day`,  tgt:'Target: 4–7% of arrivals',  border:'#534AB7', tgtBg:'#EEEDFE', tgtFg:'#3C3489' },
+    { lbl:'Total pedestrians',       val:totalPed,   sub:`Via Exhibition Loop`,      tgt:'Target: 10–15%',            border:'#0F6E56', tgtBg:'#E1F5EE', tgtFg:'#085041' },
+    { lbl:'Total coaches',           val:totalCoach, sub:`of 200 target`,            tgt:`${r(totalCoach/200*100)}% of daily target`, border:'#854F0B', tgtBg:'#FFF2CC', tgtFg:'#633806' },
+    { lbl:'Total cars parked',       val:totalCarsIn,sub:`${totalOut} departed`,     tgt:`Peak: ${peakPct}% full`,    border:st.c,      tgtBg:st.bg,      tgtFg:st.fg },
+  ];
+
+  const g = document.getElementById('viewer-summary-cards');
+  g.innerHTML = '';
+  cards.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'sum-card';
+    div.style.borderLeftColor = c.border;
+    div.innerHTML = `
+      <div class="sum-card-lbl">${c.lbl}</div>
+      <div class="sum-card-val" style="color:${c.border}">${c.val.toLocaleString()}</div>
+      <div class="sum-card-sub">${c.sub}</div>
+      <span class="sum-card-tgt" style="background:${c.tgtBg};color:${c.tgtFg}">${c.tgt}</span>`;
+    g.appendChild(div);
+  });
+}
+
+function buildViewerLotCards() {
+  const g = document.getElementById('viewer-lot-cards');
+  g.innerHTML = '';
+  LOTS.forEach(lot => {
+    const totalIn = SLOTS.reduce((s,_,si)=>s+(data[curDay][si].cars[lot.name]||0),0);
+    const pct = Math.min(totalIn/lot.cap,1);
+    const st  = statusOf(pct);
+    // Find time lot hit capacity
+    let timeFull = '—';
+    let cumSoFar = 0;
+    for (let si=0; si<SLOTS.length; si++) {
+      cumSoFar += data[curDay][si].cars[lot.name]||0;
+      if (cumSoFar >= lot.cap) { timeFull = SLOTS[si]; break; }
+    }
+    const div = document.createElement('div');
+    div.className = 'lot-sum-card';
+    div.style.borderTop = `3px solid ${st.c}`;
+    div.innerHTML = `
+      <div class="lsc-name">${lot.short}</div>
+      <div class="lsc-role">${lot.role}</div>
+      <div class="lsc-occ" style="color:${st.c}">${Math.min(totalIn,lot.cap).toLocaleString()}</div>
+      <div class="lsc-cap">of ${lot.cap} spaces · ${r(pct*100)}% full</div>
+      <span class="lsc-time" style="background:${st.bg};color:${st.fg}">
+        ${timeFull==='—' ? 'Did not fill' : 'Full at ' + timeFull}
+      </span>`;
+    g.appendChild(div);
+  });
+}
+
+function buildViewerTimeline() {
+  const tbody = document.getElementById('viewer-timeline-body');
+  tbody.innerHTML = '';
+  let cumCars=0, cumOut=0;
+  SLOTS.forEach((slot,si) => {
+    const d = data[curDay][si];
+    const cars = LOTS.reduce((s,l)=>s+(d.cars[l.name]||0),0);
+    cumCars += cars; cumOut += d.out||0;
+    const net = cumCars - cumOut;
+    const pct = Math.max(0,Math.min(100,r(net/TOTAL_CAP*100)));
+    const st  = statusOf(pct/100);
+    const pctClass = pct>=100?'pct-full':pct>=85?'pct-crit':pct>=60?'pct-busy':'pct-ok';
+    const hasData = cars>0||d.taxi>0||d.ped>0||d.coach>0;
+    const tr = document.createElement('tr');
+    tr.className = si%2===0?'row-alt':'';
+    tr.style.opacity = hasData ? '1' : '0.4';
+    tr.innerHTML = `
+      <td>${slot}</td>
+      <td>${d.taxi||0}</td>
+      <td>${d.ped||0}</td>
+      <td>${d.coach||0}</td>
+      <td>${d.cars['Lot 850']||0}</td>
+      <td>${d.cars['Lot 853']||0}</td>
+      <td>${d.cars['Lot 856']||0}</td>
+      <td>${d.cars['Lot 859']||0}</td>
+      <td style="font-weight:600">${cars}</td>
+      <td style="color:#8B0000">${d.out||0}</td>
+      <td>${r(Math.max(net,0))}</td>
+      <td class="${pctClass}">${pct}%</td>
+      <td><span style="font-size:9px;font-weight:600;padding:1px 6px;border-radius:4px;background:${st.bg};color:${st.fg}">${st.l}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function buildViewerModeBreakdown() {
+  const ts    = SLOTS.length-1;
+  const taxi  = cumField(curDay,'taxi',ts),  ped   = cumField(curDay,'ped',ts);
+  const coach = cumField(curDay,'coach',ts), cars  = totOcc(curDay,ts);
+  const taxiO = cumField(curDay,'taxi_out',ts), pedO  = cumField(curDay,'ped_out',ts);
+  const coachO= cumField(curDay,'coach_out',ts),carsO = cumField(curDay,'out',ts);
+  const grand = Math.max(taxi+ped+coach+cars,1);
+  const g = document.getElementById('viewer-mode-breakdown');
+  if(!g) return; g.innerHTML='';
+
+  function addSectionLabel(text) {
+    const l=document.createElement('div');
+    l.style='grid-column:1/-1;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);padding:4px 2px 0;display:flex;align-items:center;gap:8px;';
+    l.innerHTML=text+'<span style="flex:1;height:1px;background:var(--gold-border)"></span>';
+    g.appendChild(l);
+  }
+  function addMbdCard(lbl,val,sub,bar,barColor,color,bg,tgt){
+    const d=document.createElement('div'); d.className='mbd-card'; d.style.borderTopColor=color;
+    d.innerHTML=`<div class="mbd-lbl">${lbl}</div>
+      <div class="mbd-val" style="color:${color}">${val.toLocaleString()}</div>
+      <div class="mbd-sub">${sub}</div>
+      <div class="mbd-bar-wrap"><div class="mbd-bar" style="width:${bar}%;background:${barColor}"></div></div>
+      <span class="mbd-tgt" style="background:${bg};color:${color}">${tgt}</span>`;
+    g.appendChild(d);
+  }
+
+  addSectionLabel('Ingress — total arrivals');
+  addMbdCard('Taxis arriving',   taxi,  r(taxi/grand*100)+'% of arrivals',  Math.min(r(taxi/grand*100),100), '#534AB7','#534AB7','#EEEDFE','Target: 4–7%');
+  addMbdCard('Pedestrians in',   ped,   r(ped/grand*100)+'% of arrivals',   Math.min(r(ped/grand*100),100),  '#0F6E56','#0F6E56','#E1F5EE','Target: 10–15%');
+  addMbdCard('Coaches arrived',  coach, r(coach/200*100)+'% of 200 target', Math.min(r(coach/200*100),100),  '#BA7517','#854F0B','#FFF2CC','Target: 100–170/day');
+  addMbdCard('Cars parked',      cars,  r(cars/TOTAL_CAP*100)+'% capacity', Math.min(r(cars/TOTAL_CAP*100),100),'#185FA5','#185FA5','#E6F1FB','Target: 30–40%');
+
+  addSectionLabel('Egress — total departures');
+  addMbdCard('Taxis departed',   taxiO,  r(taxiO/Math.max(taxi,1)*100)+'% of taxis left',    Math.min(r(taxiO/Math.max(taxi,1)*100),100),  '#7F77DD','#7F77DD','#F3E8FF','Drop-off turnover');
+  addMbdCard('Pedestrians left', pedO,   r(pedO/Math.max(ped,1)*100)+'% of peds left',       Math.min(r(pedO/Math.max(ped,1)*100),100),    '#5DCAA5','#5DCAA5','#D4F5E9','Transit egress');
+  addMbdCard('Coaches departed', coachO, r(coachO/Math.max(coach,1)*100)+'% of coaches left', Math.min(r(coachO/Math.max(coach,1)*100),100), '#EF9F27','#EF9F27','#FFE8C0','Coach turnaround');
+  addMbdCard('Cars exited',      carsO,  r(carsO/Math.max(cars,1)*100)+'% of cars left',     Math.min(r(carsO/Math.max(cars,1)*100),100),  statusOf(cars/TOTAL_CAP).c,statusOf(cars/TOTAL_CAP).c,statusOf(cars/TOTAL_CAP).bg,'Lot egress');
+
+  addSectionLabel('Net crowd estimate on site');
+  const netIn=taxi+ped+coach*45+cars, netOut=taxiO+pedO+coachO*45+carsO, net=Math.max(netIn-netOut,0);
+  const nc=document.createElement('div');
+  nc.style='grid-column:1/-1;background:var(--cream);border:1px solid var(--gold-border);border-radius:10px;padding:18px 22px;border-top:3px solid var(--gold);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px';
+  nc.innerHTML=`<div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px">Estimated Murid / Jamat currently on site</div>
+    <div style="font-size:42px;font-weight:600;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:var(--gold-deep);line-height:1">${net.toLocaleString()}</div>
+    <div style="font-size:10px;color:var(--muted2);margin-top:5px">of 20,000+ expected &nbsp;&middot;&nbsp; ${r(net/200)}% of event capacity</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:11px;font-weight:600;color:var(--dark2);margin-bottom:8px">Traffic flow balance</div>
+    <div style="font-size:15px;color:var(--gold-deep);font-weight:700;margin-bottom:4px">&#8593; Ingress: ${netIn.toLocaleString()}</div>
+    <div style="font-size:15px;color:var(--mid);font-weight:700">&#8595; Egress: ${netOut.toLocaleString()}</div>
+  </div>`; g.appendChild(nc);
+}
+
+function buildViewerPeaks() {
+  let pCS=0,pCV=0,pTS=0,pTV=0,pPS=0,pPV=0;
+  SLOTS.forEach((_,si)=>{
+    const c=LOTS.reduce((s,l)=>s+(data[curDay][si].cars[l.name]||0),0);
+    const t=data[curDay][si].taxi||0, p=data[curDay][si].ped||0;
+    if(c>pCV){pCV=c;pCS=si;} if(t>pTV){pTV=t;pTS=si;} if(p>pPV){pPV=p;pPS=si;}
+  });
+  let h50=null,cC=0;
+  for(let si=0;si<SLOTS.length;si++){cC+=LOTS.reduce((s,l)=>s+(data[curDay][si].cars[l.name]||0),0);if(cC>=TOTAL_CAP*.5&&h50===null)h50=si;}
+  let ppV=0,ppS=0,cc2=0;
+  SLOTS.forEach((_,si)=>{cc2+=LOTS.reduce((s,l)=>s+(data[curDay][si].cars[l.name]||0),0);if(cc2>ppV){ppV=cc2;ppS=si;}});
+  const tc=cumField(curDay,'coach',SLOTS.length-1);
+  const peaks=[
+    {lbl:'Busiest slot — cars',time:SLOTS[pCS],val:`${pCV} cars arrived`,note:'Highest car inflow in one 10-min window — peak parking pressure.'},
+    {lbl:'Peak taxi / rideshare',time:pTV>0?SLOTS[pTS]:'—',val:pTV>0?`${pTV} taxis`:'No data',note:'Most taxis in one slot — drop-off zone at peak load.'},
+    {lbl:'50% capacity reached',time:h50!==null?SLOTS[h50]:'—',val:h50!==null?`${TOTAL_CAP/2} cars`:'Not reached',note:'When lots collectively hit 1,100 of 2,200 spaces.'},
+    {lbl:'Peak pedestrian slot',time:pPV>0?SLOTS[pPS]:'—',val:pPV>0?`${pPV} peds`:'No data',note:'Highest pedestrian count — TTC/GO transit surge moment.'},
+    {lbl:'Peak % full',time:SLOTS[ppS],val:`${r(Math.min(ppV/TOTAL_CAP,1)*100)}% overall`,note:'Moment of highest cumulative parking vs 2,200 capacity.'},
+    {lbl:'Coaches vs target',time:'Full day',val:`${tc} of 200`,note:`${r(tc/200*100)}% of the 200-coach daily target. Target: 85–95% seat fill.`},
+  ];
+  const g=document.getElementById('viewer-peak-grid');
+  if(!g)return; g.innerHTML='';
+  peaks.forEach(p=>{
+    const d=document.createElement('div'); d.className='peak-card';
+    d.innerHTML=`<div class="peak-lbl">${p.lbl}</div><div class="peak-time">${p.time}</div><div class="peak-val">${p.val}</div><div class="peak-note">${p.note}</div>`;
+    g.appendChild(d);
+  });
+}
+
+function buildViewerKPIGuide() {
+  const kpis = [
+    {
+      name:'Taxis / Rideshare inbound',
+      calc:'Count of taxis or rideshare cars (Uber/Lyft) that dropped off at the venue, added up every 10 minutes',
+      what:'Tells us how many Murids chose to take a taxi instead of driving or taking transit. A higher number means the drop-off zone is busier.',
+      target:'Should be about 4–7% of total people arriving',
+      color:'#534AB7', bg:'#EEEDFE'
+    },
+    {
+      name:'Pedestrians (Exhibition Loop)',
+      calc:'Count of people walking in from the TTC or GO transit Exhibition station, reported every 10 minutes',
+      what:'Tells us how many Murids used public transit. This helps us know if we need more volunteers at the transit connection points.',
+      target:'Should be about 10–15% of total people arriving',
+      color:'#0F6E56', bg:'#E1F5EE'
+    },
+    {
+      name:'Coaches inbound',
+      calc:'Number of coach buses that arrived in each 10-minute window, out of the ~200 total expected for the day',
+      what:'Tracks whether coaches are arriving on schedule. If too many arrive at once it creates congestion at Lot 852 staging area.',
+      target:'100–170 coaches total for the day · 85–95% seat fill rate',
+      color:'#854F0B', bg:'#FFF2CC'
+    },
+    {
+      name:'Cars parked (per lot)',
+      calc:'Number of cars that drove into each parking lot in a 10-minute slot, entered by the command centre from volunteer phone calls',
+      what:'Shows how quickly each lot is filling up. Lot 850 holds 1,000 cars, Lot 853 holds 300, Lot 856 holds 600, Lot 859 holds 300.',
+      target:'30–40% of Murids should self-drive · 2,200 total confirmed spaces',
+      color:'#185FA5', bg:'#E6F1FB'
+    },
+    {
+      name:'% Full (cumulative)',
+      calc:'Running total of all cars parked so far ÷ 2,200 total spaces × 100. Goes up as the day progresses.',
+      what:'The most important number on the dashboard. When it hits 60% start watching closely, 85% means redirect cars, 100% means close the lot.',
+      target:'Never hit 100% — redirect before 85% to avoid gridlock',
+      color:'#2E5BA8', bg:'#D6E4F7'
+    },
+    {
+      name:'Spaces remaining',
+      calc:'2,200 total capacity minus all cars currently parked across all 4 confirmed lots',
+      what:'Simple: how many parking spots are still free right now. The \"Est. time to full\" next to it tells you how long until spaces run out at the current rate of cars coming in.',
+      target:'We want to always have some buffer — never go to zero',
+      color:'#217346', bg:'#E2EFDA'
+    },
+    {
+      name:'Lots at critical / full',
+      calc:'Count of how many of the 4 parking lots have reached 85% or more of their capacity',
+      what:'If this number is greater than 0, action is needed right now — redirect incoming cars to other lots before they get stuck in line for a full lot.',
+      target:'Should always be 0. If any lot hits 85%, immediate action required.',
+      color:'#D85A30', bg:'#FAECE7'
+    },
+    {
+      name:'Est. time to full',
+      calc:'(Spaces left ÷ cars arriving per 10 min) × 10. If 50 spaces left and 10 cars arrive every 10 min, that\'s 50 minutes.',
+      what:'Gives the team a heads-up. If a lot shows "20 mins to full" the parking lead needs to start diverting cars immediately.',
+      target:'Healthy if showing more than 60 mins · Critical if under 30 mins',
+      color:'#9C5700', bg:'#FFF2CC'
+    },
+    {
+      name:'Arrival mode split',
+      calc:'Shows what % of people came by each method: taxi, walking/transit, coach bus, or self-drive car',
+      what:'Helps evaluate whether the transportation plan worked. If coach usage is well below 40% target it suggests people found it easier to drive.',
+      target:'Coach: 40–44% · Transit: 10–15% · Car: 30–40% · Taxi: 4–7%',
+      color:'#1B2A4A', bg:'#D6E4F7'
+    },
+  ];
+
+  const g = document.getElementById('viewer-kpi-guide');
+  g.innerHTML = '';
+  kpis.forEach(k => {
+    const div = document.createElement('div');
+    div.className = 'kex-card';
+    div.style.borderTop = `3px solid ${k.color}`;
+    div.innerHTML = `
+      <div class="kex-name" style="color:${k.color}">${k.name}</div>
+      <div class="kex-calc">How it's calculated: ${k.calc}</div>
+      <div class="kex-what">${k.what}</div>
+      <span class="kex-status" style="background:${k.bg};color:${k.color}">${k.target}</span>`;
+    g.appendChild(div);
+  });
+}
+
+/* ── CSV DOWNLOAD ── */
+function downloadReport() {
+  const rows = [];
+  // Header
+  rows.push(['Day','Time','Taxis','Pedestrians','Coaches','Lot 850','Lot 853','Lot 856','Lot 859',
+             'Total Cars In','Cars Out','Net Cars','% Full Cumul.','Status',
+             'Lot 850 %','Lot 853 %','Lot 856 %','Lot 859 %'].join(','));
+
+  // Build cumulative for both days
+  [1,2].forEach(day => {
+    let cumCars=0, cumOut=0;
+    SLOTS.forEach((slot,si) => {
+      const d = data[day][si];
+      const cars = LOTS.reduce((s,l)=>s+(d.cars[l.name]||0),0);
+      cumCars += cars; cumOut += d.out||0;
+      const net = Math.max(cumCars-cumOut,0);
+      const pct = Math.min(r(net/TOTAL_CAP*100),100);
+      const st  = statusOf(pct/100);
+      const lotPcts = LOTS.map(lot => {
+        const lotCum = SLOTS.slice(0,si+1).reduce((s,_,x)=>s+(data[day][x].cars[lot.name]||0),0);
+        return Math.min(r(lotCum/lot.cap*100),100)+'%';
+      });
+      rows.push([
+        `Day ${day}`, slot,
+        d.taxi||0, d.ped||0, d.coach||0,
+        d.cars['Lot 850']||0, d.cars['Lot 853']||0, d.cars['Lot 856']||0, d.cars['Lot 859']||0,
+        cars, d.out||0, net, pct+'%', st.l,
+        ...lotPcts
+      ].join(','));
+    });
+  });
+
+  const csv = rows.join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `EnerCare_Parking_Report_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* Hook viewer report into mode switching */
+const _realApplyMode = applyMode;
+window._applyModeHooked = function() {
+  _realApplyMode();
+  if (!isCommandMode) buildViewerReport();
+};
+
+
+</script>
+</body>
+</html>
