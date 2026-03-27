@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -543,7 +544,7 @@ table.dash-tbl tbody td, table.timeline-tbl tbody td,
         <div class="badge-dot"></div>
         <span id="mode-label">Command centre</span>
       </div>
-      <button class="switch-btn" onclick="openSwitchModal()">Switch mode</button>
+      <button class="switch-btn" onclick="openSwitchModal()" id="switch-mode-btn">Command centre login</button>
     </div>
   </div>
 </header>
@@ -716,7 +717,7 @@ table.dash-tbl tbody td, table.timeline-tbl tbody td,
   <div class="modal-box">
     <div class="modal-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
     <div class="modal-title">Command centre access</div>
-    <div class="modal-sub">Enter the 4-digit PIN to enable data entry.</div>
+    <div class="modal-sub">Enter the PIN to unlock data entry. Viewers do not need a PIN — just close this.</div>
     <input type="password" class="modal-input" id="pin-input" maxlength="4" placeholder="&middot;&middot;&middot;&middot;" oninput="pinInput(this)">
     <div class="modal-error" id="pin-error"></div>
     <button class="modal-btn" onclick="submitPin()">Unlock</button>
@@ -1293,9 +1294,8 @@ function fetchLatestForViewer() {
 buildSlotStrip();
 loadData();
 
-/* ── MODE MANAGEMENT ── */
-const CMD_PIN = '1302';  // Change this PIN before event day
-let isCommandMode = true;  // Default: command centre mode
+const CMD_PIN_HASH = 'ee47968ec53bbe68eaf52703d6cab88d710f59de77edf4826b4ccaad0aed36ab'//'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+let isCommandMode = false;  // Default: viewer mode — PIN required to enter command centre
 
 
 /* ── VIEWER AUTO-REFRESH (30s) ─────────────────────────── */
@@ -1319,21 +1319,26 @@ function applyMode() {
     body.classList.remove('view-mode');
     badge.className = 'mode-badge command';
     label.textContent = 'Command centre';
+    const sb = document.getElementById('switch-mode-btn');
+    if (sb) sb.textContent = 'Exit to viewer';
     stopViewerRefresh();
   } else {
     body.classList.add('view-mode');
     badge.className = 'mode-badge view';
     label.textContent = 'View only';
+    const sb = document.getElementById('switch-mode-btn');
+    if (sb) sb.textContent = 'Command centre login';
     startViewerRefresh();
   }
 }
 
 function openSwitchModal() {
   if (isCommandMode) {
+    /* Command centre → viewer: no PIN needed, just switch */
     isCommandMode = false;
     (window._applyModeHooked || applyMode)();
   } else {
-    // switching TO command mode — need PIN
+    /* Viewer → command centre: always require PIN */
     document.getElementById('pin-input').value = '';
     document.getElementById('pin-error').textContent = '';
     document.getElementById('pin-input').classList.remove('error');
@@ -1348,9 +1353,15 @@ function pinInput(el) {
   if (el.value.length === 4) submitPin();
 }
 
-function submitPin() {
+async function submitPin() {
   const val = document.getElementById('pin-input').value;
-  if (val === CMD_PIN) {
+  if (!val) return;
+  /* Hash the entered PIN with SHA-256 using the browser's built-in Web Crypto API */
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(val));
+  const hashArray  = Array.from(new Uint8Array(hashBuffer));
+  const hashHex    = hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
+  if (hashHex === CMD_PIN_HASH) {
     isCommandMode = true;
     (window._applyModeHooked || applyMode)();
     closePinModal();
@@ -1402,8 +1413,9 @@ document.getElementById('reset-modal').addEventListener('click', function(e) {
   if (e.target === this) closeResetModal();
 });
 
-// Start in command mode
+/* Start in viewer mode — command centre requires PIN */
 applyMode();
+startViewerRefresh();  // begin cloud polling immediately for viewers
 
 /* ══════════════════════════════════════════════════
    VIEWER REPORT FUNCTIONS
