@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title> Canada Visit 2026 — Enercare Centre Parking Operations</title>
-<!-- <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 :root {
@@ -248,40 +246,164 @@ table.dash-tbl tbody tr:hover td { background:var(--cream2); }
 
 /* ══ ENTRY PANEL ════════════════════════════════════════ */
 .entry-panel {
-  background:var(--cream); border:1px solid var(--gold-border); border-radius:10px; padding:14px;
-  border-top:3px solid var(--gold);
+  background:var(--cream); border:1px solid var(--gold-border);
+  border-radius:12px; padding:16px 18px; border-top:4px solid var(--gold);
 }
 .entry-title {
-  font-family:var(--serif); font-size:14px; font-weight:600; color:var(--dark2); margin-bottom:2px;
+  font-family:var(--serif); font-size:16px; font-weight:600;
+  color:var(--dark2); margin-bottom:2px; letter-spacing:.01em;
 }
-.entry-sub   { font-size:9px; color:var(--muted2); margin-bottom:12px; }
+.entry-sub { font-size:10px; color:var(--muted2); }
 .entry-slot-badge {
   display:inline-block; background:var(--gold-deep); color:var(--gold-pale);
-  font-size:10px; font-weight:700; padding:2px 10px; border-radius:10px;
-  font-family:var(--mono); margin-left:6px; letter-spacing:.04em;
+  font-size:11px; font-weight:700; padding:3px 12px; border-radius:10px;
+  font-family:var(--mono); margin-left:8px; letter-spacing:.04em;
+  vertical-align:middle;
 }
-.entry-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.entry-group-title {
+
+/* New prominent slot block */
+.ep-header-inner {
+  display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;
+}
+.ep-header-left { flex:1; min-width:0; }
+.ep-title-row {
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+
+.ep-slot-block {
+  display:flex; flex-direction:row; align-items:center; gap:10px;
+  background:linear-gradient(135deg, var(--gold-deep) 0%, #6B4F0A 100%);
+  border-radius:10px; padding:6px 16px;
+  text-align:center;
+  box-shadow: 0 2px 10px rgba(139,105,20,0.3);
+  border:2px solid var(--gold-mid);
+  flex-shrink:0;
+}
+.ep-slot-label {
+  font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(250,245,228,0.6); white-space:nowrap;
+}
+.ep-slot-time {
+  font-family:'Inter', sans-serif; font-size:26px; font-weight:700;
+  font-variant-numeric:tabular-nums; color:#FDFAEF; line-height:1;
+  letter-spacing:.02em; white-space:nowrap;
+}
+.ep-slot-pulse {
+  display:flex; align-items:center; gap:4px;
+  font-size:9px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+  color:rgba(250,245,228,0.55); white-space:nowrap;
+}
+.ep-slot-dot {
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:#6DBF5E; animation:pulse 2s infinite; flex-shrink:0;
+}
+
+/* Entry panel header */
+.ep-header { margin-bottom:14px; }
+
+/* Three-column layout */
+.ep-columns {
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:0;
+  border:1px solid var(--gold-border);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+/* Each column */
+.ep-col {
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.ep-col-ingress  { background:#FDFAF2; border-right:1px solid var(--gold-border); }
+.ep-col-traffic  { background:#F8F8F5; border-right:1px solid var(--gold-border); }
+.ep-col-egress   { background:#FFF8F8; }
+
+/* Column header banners */
+.ep-col-header {
+  display:flex; align-items:center; gap:8px;
+  font-family:var(--serif); font-size:15px; font-weight:600;
+  padding:8px 12px; border-radius:7px; margin-bottom:12px;
+  line-height:1.2;
+}
+.ep-col-header-in      { background:linear-gradient(135deg,#EBF5DC,#F5FAE8); color:#27500A; }
+.ep-col-header-traffic { background:linear-gradient(135deg,#EEE8FF,#F5F0FF); color:#3C2878; }
+.ep-col-header-out     { background:linear-gradient(135deg,#FDEAE8,#FFF0EE); color:#7A1A1A; }
+.ep-col-icon { font-size:18px; }
+.ep-col-sub  { font-size:10px; font-family:var(--font); font-weight:400; opacity:0.75; margin-left:2px; }
+
+/* Section labels inside columns */
+.ep-section-label {
   font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--muted2); margin-bottom:8px; padding-bottom:5px;
-  border-bottom:1px solid var(--gold-border);
+  color:var(--muted2); margin-bottom:7px; padding-bottom:5px;
+  border-bottom:1px solid var(--border-lt);
 }
-.entry-fields { display:flex; flex-direction:column; gap:5px; }
+.ep-traffic-note {
+  font-size:9px; color:var(--muted2); line-height:1.5; margin-top:10px;
+  padding:7px 9px; background:rgba(184,149,42,0.06);
+  border-radius:5px; border:1px solid var(--gold-border);
+}
+
+/* Field list — vertical stack, perfectly aligned */
+.ep-field-list {
+  display:flex; flex-direction:column; gap:7px;
+}
+
+/* Individual field row */
+.ep-field {
+  display:grid;
+  grid-template-columns: 130px 72px 1fr;
+  align-items:center;
+  gap:8px;
+}
+.ep-label {
+  font-size:11px; font-weight:600; color:var(--dark2);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.ep-input {
+  width:72px; padding:7px 8px; border-radius:6px;
+  font-size:14px; text-align:center;
+  font-family:'Inter',sans-serif; font-weight:700;
+  font-variant-numeric:tabular-nums;
+  border:2px solid var(--gold-border); background:var(--cream2);
+  color:var(--dark); outline:none; transition:border-color .15s, box-shadow .15s;
+}
+.ep-input:focus {
+  border-color:var(--gold); background:var(--gold-xpale);
+  box-shadow:0 0 0 3px rgba(184,149,42,0.15);
+}
+.ep-hint {
+  font-size:9px; color:var(--muted2); line-height:1.3;
+}
+
+/* Keep old .efield classes working for any remaining usage */
 .efield { display:flex; align-items:center; gap:7px; }
-.efield-label { font-size:10px; font-weight:600; width:88px; flex-shrink:0; }
+.efield-label { font-size:11px; font-weight:600; width:88px; flex-shrink:0; }
 .efield-input {
-  width:64px; padding:5px 7px; border-radius:5px; font-size:12px;
-  text-align:center; font-family:var(--mono); font-weight:600;
+  width:64px; padding:5px 7px; border-radius:5px; font-size:13px;
+  text-align:center; font-family:'Inter',sans-serif; font-weight:700;
+  font-variant-numeric:tabular-nums;
   border:1.5px solid var(--gold-border); background:var(--cream2); color:var(--dark);
   outline:none; transition:border-color .15s;
 }
 .efield-input:focus { border-color:var(--gold); background:var(--gold-xpale); }
 .efield-hint { font-size:9px; color:var(--muted2); }
-.outbound-row {
-  margin-top:9px; padding-top:9px; border-top:1px solid var(--gold-border);
-  display:flex; align-items:center; gap:7px;
+.outbound-row { margin-top:9px; padding-top:9px; border-top:1px solid var(--gold-border); display:flex; align-items:center; gap:7px; }
+.outbound-label { font-size:11px; font-weight:700; color:#8B0000; }
+
+/* Responsive — stack columns on smaller screens */
+@media (max-width:960px) {
+  .ep-columns { grid-template-columns:1fr; }
+  .ep-col-ingress, .ep-col-traffic { border-right:none; border-bottom:1px solid var(--gold-border); }
+  .ep-field { grid-template-columns:120px 64px 1fr; }
 }
-.outbound-label { font-size:10px; font-weight:700; color:#8B0000; }
+@media (max-width:540px) {
+  .ep-field { grid-template-columns:110px 60px 1fr; }
+  .ep-input { width:60px; font-size:13px; }
+}
 
 /* ══ VIEWER SECTIONS ════════════════════════════════════ */
 .view-only-section { display:none; }
@@ -567,12 +689,102 @@ table.dash-tbl tbody td, table.timeline-tbl tbody td,
   <span id="alert-text">All lots within normal range &mdash; continue monitoring every 10 minutes</span>
 </div>
 
+<!-- COMMAND CENTRE ENTRY PANEL -->
+<div class="entry-panel cmd-only-section">
+
+  <!-- Header row -->
+  <div class="ep-header">
+    <div class="ep-header-inner">
+      <div class="ep-header-left">
+        <div class="ep-title-row">
+          <div class="entry-title">Data entry</div>
+          <div class="ep-slot-block">
+            <div class="ep-slot-label">slot</div>
+            <div class="ep-slot-time" id="cur-slot-lbl">&mdash;</div>
+            <div class="ep-slot-pulse"><span class="ep-slot-dot"></span>active</div>
+          </div>
+        </div>
+        <div class="entry-sub">Enter counts from volunteer phone calls &mdash; all fields save automatically</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREE COLUMNS: Ingress | Traffic Flow | Egress -->
+  <div class="ep-columns">
+
+    <!-- ── COLUMN 1: INGRESS ─────────────────────────── -->
+    <div class="ep-col ep-col-ingress">
+      <div class="ep-col-header ep-col-header-in">
+        <span class="ep-col-icon">&#8593;</span>
+        <span>Ingress</span>
+        <span class="ep-col-sub">arrivals this slot</span>
+      </div>
+      <div class="ep-section-label">People arriving</div>
+      <div id="mode-inputs" class="ep-field-list"></div>
+      <div class="ep-section-label" style="margin-top:10px">Cars into confirmed lots</div>
+      <div id="lot-inputs" class="ep-field-list"></div>
+    </div>
+
+    <!-- ── COLUMN 2: TRAFFIC FLOW ────────────────────── -->
+    <div class="ep-col ep-col-traffic">
+      <div class="ep-col-header ep-col-header-traffic">
+        <span class="ep-col-icon">&#128652;</span>
+        <span>Traffic flow</span>
+        <span class="ep-col-sub">vehicle counts only</span>
+      </div>
+      <div class="ep-section-label">Other lots (no capacity limit)</div>
+      <div id="tlot-inputs" class="ep-field-list"></div>
+      <div class="ep-traffic-note">These lots manage flow &amp; congestion only &mdash; not Jamat parking capacity</div>
+    </div>
+
+    <!-- ── COLUMN 3: EGRESS ──────────────────────────── -->
+    <div class="ep-col ep-col-egress">
+      <div class="ep-col-header ep-col-header-out">
+        <span class="ep-col-icon">&#8595;</span>
+        <span>Egress</span>
+        <span class="ep-col-sub">departures this slot</span>
+      </div>
+      <div class="ep-section-label">People &amp; vehicles leaving</div>
+      <div class="ep-field-list">
+        <div class="ep-field">
+          <label class="ep-label" style="color:#7F77DD">Taxis departing</label>
+          <input type="number" class="ep-input" style="border-color:#7F77DD;background:#F3E8FF;color:#3C3489" min="0" step="1" id="inp-taxi-out" value="0" oninput="upd('taxi_out',this.value)">
+          <span class="ep-hint">drop-offs done</span>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label" style="color:#5DCAA5">Pedestrians out</label>
+          <input type="number" class="ep-input" style="border-color:#5DCAA5;background:#D4F5E9;color:#085041" min="0" step="1" id="inp-ped-out" value="0" oninput="upd('ped_out',this.value)">
+          <span class="ep-hint">via transit</span>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label" style="color:#EF9F27">Coaches departed</label>
+          <input type="number" class="ep-input" style="border-color:#EF9F27;background:#FFE8C0;color:#633806" min="0" step="1" id="inp-coach-out" value="0" oninput="upd('coach_out',this.value)">
+          <span class="ep-hint">left staging</span>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label" style="color:#C03030">Cars exiting lots</label>
+          <input type="number" class="ep-input" style="border-color:#CC3333;background:#FFF0F0;color:#8B0000" min="0" step="1" id="inp-out" value="0" oninput="upd('out',this.value)">
+          <span class="ep-hint">all parking lots</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /ep-columns -->
+</div>
+
+
+<!-- CROWD ESTIMATION FACTORS — cmd-only, shows assumptions -->
+<div class="cmd-only-section" style="background:var(--gold-pale);border:1px solid var(--gold-border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 20px;">
+  <span style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep)">Crowd estimate factors</span>
+  <span id="crowd-factor-display" style="font-size:11px;color:var(--mid);font-family:var(--mono)"></span>
+  <span style="font-size:9px;color:var(--muted2);margin-left:auto">Net crowd = (taxis+cabs) × factor + peds + coaches × factor + parked cars × factor + drop-offs × factor</span>
+</div>
 <div class="kpi-strip" id="kpi-strip"></div>
 
 <div class="row-2">
   <div class="card">
     <div class="card-head">
-      <div><div class="card-title">Parking lot occupancy</div><div class="card-sub">Cumulative to selected slot &middot; 2,200 confirmed spaces</div></div>
+      <div><div class="card-title">Parking lot occupancy</div><div class="card-sub">Cumulative to selected slot &middot; 2,200 confirmed spaces · 25,000–28,000 visitors expected</div></div>
       <span class="card-badge" id="overall-badge"></span>
     </div>
     <div class="lot-rows" id="lot-rows"></div>
@@ -611,37 +823,7 @@ table.dash-tbl tbody td, table.timeline-tbl tbody td,
     <div class="card-head"><div><div class="card-title">% Full over time</div><div class="card-sub">Cumulative &mdash; dashed line = 85% critical threshold</div></div></div>
     <div class="chart-wrap" style="height:138px"><canvas id="line-chart"></canvas></div>
   </div>
-  <div class="entry-panel cmd-only-section">
-    <div class="entry-title">Command centre entry<span class="entry-slot-badge" id="cur-slot-lbl">&mdash;</span></div>
-    <div class="entry-sub">Enter counts received by volunteer phone call</div>
-    <div class="entry-grid">
-      <div>
-        <div class="entry-group-title">Transport modes</div>
-        <div class="entry-fields" id="mode-inputs"></div>
-      </div>
-      <div>
-        <div class="entry-group-title">Cars per parking lot</div>
-        <div class="entry-fields" id="lot-inputs"></div>
-      </div>
-    </div>
-    <div class="outbound-row" style="flex-direction:column;gap:6px;align-items:flex-start">
-      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);padding-bottom:4px;border-bottom:1px solid var(--gold-border);width:100%">Egress — departures this slot</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">
-        <div class="efield"><span class="efield-label" style="color:#7F77DD;width:86px">Taxis leaving</span>
-          <input type="number" class="efield-input" style="border-color:#7F77DD;background:#F3E8FF;color:#3C3489" min="0" step="1" id="inp-taxi-out" value="0" oninput="upd('taxi_out',this.value)">
-          <span class="efield-hint">drop-offs done</span></div>
-        <div class="efield"><span class="efield-label" style="color:#5DCAA5;width:86px">Peds leaving</span>
-          <input type="number" class="efield-input" style="border-color:#5DCAA5;background:#D4F5E9;color:#085041" min="0" step="1" id="inp-ped-out" value="0" oninput="upd('ped_out',this.value)">
-          <span class="efield-hint">via transit</span></div>
-        <div class="efield"><span class="efield-label" style="color:#EF9F27;width:86px">Coaches out</span>
-          <input type="number" class="efield-input" style="border-color:#EF9F27;background:#FFE8C0;color:#633806" min="0" step="1" id="inp-coach-out" value="0" oninput="upd('coach_out',this.value)">
-          <span class="efield-hint">departed</span></div>
-        <div class="efield"><span class="outbound-label" style="width:86px">Cars out</span>
-          <input type="number" class="efield-input" style="border-color:#CC3333;background:#FFF0F0;color:#8B0000" min="0" step="1" id="inp-out" value="0" oninput="upd('out',this.value)">
-          <span class="efield-hint">lots</span></div>
-      </div>
-    </div>
-  </div>
+
   <div class="card">
     <div class="card-head"><div><div class="card-title">Recent 10-min log</div><div class="card-sub">Last 10 slots</div></div></div>
     <div class="tbl-wrap">
@@ -717,23 +899,37 @@ table.dash-tbl tbody td, table.timeline-tbl tbody td,
   <div class="modal-box">
     <div class="modal-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
     <div class="modal-title">Command centre access</div>
-    <div class="modal-sub">Enter the PIN to unlock data entry. Viewers do not need a PIN — just close this.</div>
-    <input type="password" class="modal-input" id="pin-input" maxlength="4" placeholder="&middot;&middot;&middot;&middot;" oninput="pinInput(this)">
+    <div class="modal-sub">Enter the 6-digit PIN to unlock data entry. Viewers do not need a PIN &mdash; just close this.</div>
+    <input type="password" class="modal-input" id="pin-input" maxlength="6" placeholder="&middot;&middot;&middot;&middot;&middot;&middot;" oninput="pinInput(this)">
     <div class="modal-error" id="pin-error"></div>
     <button class="modal-btn" onclick="submitPin()">Unlock</button>
     <button class="modal-cancel" onclick="closePinModal()">Cancel &mdash; stay in view mode</button>
   </div>
 </div>
 
-<!-- RESET CONFIRM MODAL -->
+<!-- RESET CONFIRM MODAL — 2-step: confirm then PIN -->
 <div class="modal-overlay" id="reset-modal">
   <div class="confirm-box">
     <div class="confirm-icon"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.49"/></svg></div>
-    <div class="confirm-title">Reset all data for Day <span id="reset-day-num">1</span>?</div>
-    <div class="confirm-sub">This will clear every count entered for the current day. This cannot be undone.</div>
-    <div class="confirm-btns">
-      <button class="confirm-cancel-btn" onclick="closeResetModal()">Cancel</button>
-      <button class="confirm-reset-btn" onclick="confirmReset()">Reset day data</button>
+    <!-- Step 1: Warning -->
+    <div id="reset-step1">
+      <div class="confirm-title">Reset all data for Day <span id="reset-day-num">1</span>?</div>
+      <div class="confirm-sub">This will permanently erase every count entered for this day. This <strong>cannot be undone</strong>. Enter the reset PIN on the next screen to confirm.</div>
+      <div class="confirm-btns">
+        <button class="confirm-cancel-btn" onclick="closeResetModal()">Cancel</button>
+        <button class="confirm-reset-btn" onclick="showResetPinStep()">Continue &rarr;</button>
+      </div>
+    </div>
+    <!-- Step 2: PIN entry -->
+    <div id="reset-step2" style="display:none">
+      <div class="confirm-title" style="color:#8B0000">Enter reset PIN</div>
+      <div class="confirm-sub">This is a separate 6-digit PIN from your command centre PIN. Enter it to permanently delete Day <span id="reset-day-num2">1</span> data.</div>
+      <input type="password" class="modal-input" id="reset-pin-input" maxlength="6" placeholder="&middot;&middot;&middot;&middot;&middot;&middot;" oninput="resetPinInput(this)" style="margin-bottom:8px;">
+      <div class="modal-error" id="reset-pin-error"></div>
+      <div class="confirm-btns">
+        <button class="confirm-cancel-btn" onclick="closeResetModal()">Cancel</button>
+        <button class="confirm-reset-btn" onclick="submitResetPin()">Delete data</button>
+      </div>
     </div>
   </div>
 </div>
@@ -749,15 +945,37 @@ const LOTS = [
 const TOTAL_CAP = 2200;
 const COACH_TARGET = 200;
 
+/* ── CROWD ESTIMATION FACTORS ─────────────────────────────────
+   How many people per vehicle/unit for net crowd estimate.
+   Adjust these if your on-the-ground counts differ.
+   ─────────────────────────────────────────────────────────── */
+const CROWD = {
+  taxi:      2.2,   // avg passengers per taxi/rideshare (1–3, mostly pairs)
+  ped:       1.0,   // pedestrians counted individually — 1:1
+  coach:     45,    // avg occupancy per coach (confirmed average for this event)
+  car_park:  2.8,   // avg people per parked car (families + couples, some solo)
+  drop_off:  3.0,   // avg people per drop-off vehicle (Lot 851) — tends to be families
+  car_out:   2.8,   // avg people per car that exits — same as car_park
+};
+
+/* Traffic-monitoring lots — no capacity limit, flow-count only */
+const TRAFFIC_LOTS = [
+  {name:'Lot 851',  short:'851',  role:'Drop-off zone',     color:'#6B4EA8'},
+  {name:'Lot 852',  short:'852',  role:'Bus staging',       color:'#0F6E56'},
+  {name:'Lot 854',  short:'854',  role:'Public parking',    color:'#4A7FB5'},
+  {name:'Lot 855a', short:'855a', role:'Public parking',    color:'#4A7FB5'},
+  {name:'Lot 855b', short:'855b', role:'Jamat (TBC/160)',   color:'#854F0B'},
+  {name:'BL',       short:'BL',   role:'Volunteer (TBC/330)', color:'#5C7A3E'},
+];
+
 /* ── SLOTS 09:00–17:00 every 10 min ── */
 function genSlots() {
   const out = []; let h=9, m=0;
-  while (h < 17) {
-    const nh = m+10>=60 ? h+1 : h, nm = (m+10)%60;
-    if (nh > 17) break;
-    const fmt = (hh, mm) => { const h2 = hh>12?hh-12:hh; return `${h2}:${String(mm).padStart(2,'0')}${hh<12?'a':'p'}`; };
+  while (!(h===22 && m===0)) {
+    const fmt = (hh, mm) => { const h2 = hh>12?hh-12:(hh===0?12:hh); return `${h2}:${String(mm).padStart(2,'0')}${hh<12?'AM':'PM'}`; };
     out.push(fmt(h,m));
-    h=nh; m=nm;
+    m+=10; if(m>=60){m=0;h++;}
+    if(h>22) break;
   }
   return out;
 }
@@ -766,8 +984,9 @@ const SLOTS = genSlots();
 /* ── DATA STORE ── */
 const data = {1:{}, 2:{}};
 [1,2].forEach(d => SLOTS.forEach((_,si) => {
-  data[d][si] = {taxi:0, ped:0, coach:0, taxi_out:0, ped_out:0, coach_out:0, out:0, cars:{}};
+  data[d][si] = {taxi:0, ped:0, coach:0, taxi_out:0, ped_out:0, coach_out:0, out:0, cars:{}, tlots:{}};
   LOTS.forEach(l => { data[d][si].cars[l.name] = 0; });
+    TRAFFIC_LOTS.forEach(l => { data[d][si].tlots[l.name] = 0; });
 }));
 
 /* ── SEED DAY 1 DEMO DATA ── */
@@ -803,6 +1022,10 @@ function cumLot(day, lot, upTo) {
 }
 function totOcc(day, upTo) { return LOTS.reduce((s,l) => s + cumLot(day,l,upTo), 0); }
 function cumField(day, field, upTo) { let t=0; for (let si=0;si<=upTo;si++) t+=data[day][si][field]||0; return t; }
+function cumTlot(day, lotName, upTo) { let t=0; for (let si=0;si<=upTo;si++) t+=(data[day][si].tlots&&data[day][si].tlots[lotName])||0; return t; }
+function cumAllTlots(day, upTo) { return TRAFFIC_LOTS.reduce((s,l)=>s+cumTlot(day,l.name,upTo),0); }
+/* Drop-off lot (851) cumulative */
+function cumDropOff(day, upTo) { return cumTlot(day,'Lot 851',upTo); }
 function statusOf(pct) {
   if (pct >= 1)    return {l:'Full',     c:'#E24B4A', bg:'#FCEBEB', fg:'#791F1F'};
   if (pct >= 0.85) return {l:'Critical', c:'#D85A30', bg:'#FAECE7', fg:'#712B13'};
@@ -840,10 +1063,17 @@ function buildAlert() {
   const crit   = LOTS.filter(l => cumLot(curDay,l,curSlot)/l.cap >= 0.85);
   const el     = document.getElementById('alert-strip');
   const txt    = document.getElementById('alert-text');
-  const netIn  = cumField(curDay,'taxi',curSlot)+cumField(curDay,'ped',curSlot)+cumField(curDay,'coach',curSlot)*45+totOcc(curDay,curSlot);
-  const netOut = cumField(curDay,'taxi_out',curSlot)+cumField(curDay,'ped_out',curSlot)+cumField(curDay,'coach_out',curSlot)*45+cumField(curDay,'out',curSlot);
+  const netIn  = cumField(curDay,'taxi',curSlot)*CROWD.taxi
+               + cumField(curDay,'ped',curSlot)*CROWD.ped
+               + cumField(curDay,'coach',curSlot)*CROWD.coach
+               + totOcc(curDay,curSlot)*CROWD.car_park
+               + cumDropOff(curDay,curSlot)*CROWD.drop_off;
+  const netOut = cumField(curDay,'taxi_out',curSlot)*CROWD.taxi
+               + cumField(curDay,'ped_out',curSlot)*CROWD.ped
+               + cumField(curDay,'coach_out',curSlot)*CROWD.coach
+               + cumField(curDay,'out',curSlot)*CROWD.car_out;
   const net    = Math.max(netIn-netOut,0);
-  const flow   = `Net on site: ~${net.toLocaleString()} · In ${netIn.toLocaleString()} · Out ${netOut.toLocaleString()}`;
+  const flow   = `Crowd on site: ~${Math.round(net).toLocaleString()} people (taxi×${CROWD.taxi} · ped×1 · coach×${CROWD.coach} · car×${CROWD.car_park} · drop-off×${CROWD.drop_off}) · arrived ~${Math.round(netIn).toLocaleString()} · departed ~${Math.round(netOut).toLocaleString()}`;
   if (crit.length > 0) {
     el.className = 'alert-strip critical';
     txt.innerHTML = `<strong>CRITICAL:</strong> ${crit.map(l=>l.name).join(', ')} at 85%+ — redirect Murid/Jamat now &nbsp;|&nbsp; ${flow}`;
@@ -1088,31 +1318,35 @@ function buildInputs() {
   const modeInputs = document.getElementById('mode-inputs');
   modeInputs.innerHTML = '';
   const modes = [
-    {field:'taxi',  lbl:'Taxis',        color:'#534AB7', bg:'#F3E8FF', hint:'inbound'},
-    {field:'ped',   lbl:'Pedestrians',  color:'#0F6E56', bg:'#E8F5E9', hint:'Exhibition Loop'},
-    {field:'coach', lbl:'Coaches',      color:'#854F0B', bg:'#FFF8E6', hint:'inbound'},
+    {field:'taxi',  lbl:'Taxis / rideshare',  color:'#534AB7', bg:'#F3E8FF', hint:'arrived at drop-off'},
+    {field:'ped',   lbl:'Pedestrians',         color:'#0F6E56', bg:'#E8F5E9', hint:'via Exhibition Loop'},
+    {field:'coach', lbl:'Coaches (×45 pax)',   color:'#854F0B', bg:'#FFF8E6', hint:'entered Lot 852 staging'},
   ];
   modes.forEach(m => {
     const div = document.createElement('div');
-    div.className = 'efield';
+    div.className = 'ep-field';
     div.innerHTML = `
-      <label class="efield-label" style="color:${m.color}">${m.lbl}</label>
-      <input type="number" class="efield-input" style="border-color:${m.color};background:${m.bg};color:${m.color}"
+      <label class="ep-label" style="color:${m.color}">${m.lbl}</label>
+      <input type="number" class="ep-input" style="border-color:${m.color};background:${m.bg};color:${m.color}"
         min="0" step="1" value="${data[curDay][curSlot][m.field]||0}" oninput="upd('${m.field}',this.value)">
-      <span class="efield-hint">${m.hint}</span>`;
+      <span class="ep-hint">${m.hint}</span>`;
     modeInputs.appendChild(div);
   });
 
   const lotInputs = document.getElementById('lot-inputs');
   lotInputs.innerHTML = '';
+  const lotColors  = {'Lot 850':'#8B6914','Lot 853':'#0F6E56','Lot 856':'#854F0B','Lot 859':'#A32D2D'};
+  const lotBgs     = {'Lot 850':'#FAF5E4','Lot 853':'#E1F5EE','Lot 856':'#FFF8E6','Lot 859':'#FDE8DC'};
   LOTS.forEach(lot => {
     const div = document.createElement('div');
-    div.className = 'efield';
+    div.className = 'ep-field';
+    const c  = lotColors[lot.name]||'#185FA5';
+    const bg = lotBgs[lot.name]||'#EBF5FF';
     div.innerHTML = `
-      <label class="efield-label" style="color:#185FA5">${lot.short}</label>
-      <input type="number" class="efield-input" style="border-color:#2E5BA8;background:#EBF5FF;color:#00008B"
+      <label class="ep-label" style="color:${c}">${lot.short} — ${lot.role}</label>
+      <input type="number" class="ep-input" style="border-color:${c};background:${bg};color:${c}"
         min="0" step="1" value="${data[curDay][curSlot].cars[lot.name]||0}" oninput="updCar('${lot.name}',this.value)">
-      <span class="efield-hint">in</span>`;
+      <span class="ep-hint">cars in</span>`;
     lotInputs.appendChild(div);
   });
 
@@ -1123,6 +1357,25 @@ function buildInputs() {
   if(_tOut) _tOut.value=data[curDay][curSlot].taxi_out||0;
   if(_pOut) _pOut.value=data[curDay][curSlot].ped_out||0;
   if(_cOut) _cOut.value=data[curDay][curSlot].coach_out||0;
+
+  /* Traffic lots inputs */
+  const tlotContainer = document.getElementById('tlot-inputs');
+  if (tlotContainer) {
+    tlotContainer.innerHTML = '';
+    const tlotColors = {'Lot 851':'#6B4EA8','Lot 852':'#0F6E56','Lot 854':'#4A7FB5','Lot 855a':'#4A7FB5','Lot 855b':'#854F0B','BL':'#5C7A3E'};
+    const tlotBgs    = {'Lot 851':'#EDE0FF','Lot 852':'#E1F5EE','Lot 854':'#E6F1FB','Lot 855a':'#EBF5FF','Lot 855b':'#FFF8E6','BL':'#EBF5E8'};
+    const tlotVal    = data[curDay][curSlot].tlots || {};
+    TRAFFIC_LOTS.forEach(lot => {
+      const div = document.createElement('div'); div.className='ep-field';
+      const c = tlotColors[lot.name]||'#888', bg = tlotBgs[lot.name]||'#F5F5F5';
+      div.innerHTML = `<label class="ep-label" style="color:${c}">${lot.short} — ${lot.role}</label>
+        <input type="number" class="ep-input" style="border-color:${c};background:${bg};color:${c}"
+          min="0" step="1" value="${tlotVal[lot.name]||0}"
+          oninput="updTlot('${lot.name}',this.value)">
+        <span class="ep-hint">vehicles</span>`;
+      tlotContainer.appendChild(div);
+    });
+  }
 }
 
 /* ── UPDATE FNS ── */
@@ -1132,6 +1385,11 @@ function upd(field, val) {
 }
 function updCar(name, val) {
   data[curDay][curSlot].cars[name] = Math.max(0, parseInt(val)||0);
+  updateTime(); saveData(); refresh();
+}
+function updTlot(name, val) {
+  if (!data[curDay][curSlot].tlots) data[curDay][curSlot].tlots = {};
+  data[curDay][curSlot].tlots[name] = Math.max(0, parseInt(val)||0);
   updateTime(); saveData(); refresh();
 }
 function updateSlotStrip() {
@@ -1152,6 +1410,8 @@ function setDay(d, el) {
 }
 function refresh() {
   updateSlotStrip();
+  const cfd = document.getElementById('crowd-factor-display');
+  if (cfd) cfd.textContent = `Taxi: ×${CROWD.taxi}  ·  Pedestrian: ×${CROWD.ped}  ·  Coach: ×${CROWD.coach} seats  ·  Parked car: ×${CROWD.car_park} pax  ·  Drop-off car: ×${CROWD.drop_off} pax  ·  Exiting car: ×${CROWD.car_out} pax`;
   buildAlert();
   buildKPIs();
   buildLotRows();
@@ -1294,7 +1554,9 @@ function fetchLatestForViewer() {
 buildSlotStrip();
 loadData();
 
-const CMD_PIN_HASH = 'ee47968ec53bbe68eaf52703d6cab88d710f59de77edf4826b4ccaad0aed36ab'//'03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+const CMD_PIN_HASH = 'aa2a63f981912262c6d3d847249e387c7f6b7b5f0190bbe83fc99c194342caea';  
+
+const RESET_PIN_HASH = '1a1bf22ca9296cdab81cd71c11d2061f25618a6549041ad29289ec8e4d6dae97'; 
 let isCommandMode = false;  // Default: viewer mode — PIN required to enter command centre
 
 
@@ -1350,7 +1612,7 @@ function openSwitchModal() {
 function pinInput(el) {
   el.classList.remove('error');
   document.getElementById('pin-error').textContent = '';
-  if (el.value.length === 4) submitPin();
+  if (el.value.length === 6) submitPin();
 }
 
 async function submitPin() {
@@ -1391,7 +1653,42 @@ document.getElementById('pin-input').addEventListener('keydown', function(e) {
 /* ── RESET MANAGEMENT ── */
 function openResetConfirm() {
   document.getElementById('reset-day-num').textContent = curDay;
+  document.getElementById('reset-day-num2').textContent = curDay;
+  document.getElementById('reset-step1').style.display = 'block';
+  document.getElementById('reset-step2').style.display = 'none';
+  document.getElementById('reset-pin-input').value = '';
+  document.getElementById('reset-pin-error').textContent = '';
+  document.getElementById('reset-pin-input').classList.remove('error');
   document.getElementById('reset-modal').classList.add('open');
+}
+
+function showResetPinStep() {
+  document.getElementById('reset-step1').style.display = 'none';
+  document.getElementById('reset-step2').style.display = 'block';
+  setTimeout(() => document.getElementById('reset-pin-input').focus(), 50);
+}
+
+function resetPinInput(el) {
+  el.classList.remove('error');
+  document.getElementById('reset-pin-error').textContent = '';
+  if (el.value.length >= 6) submitResetPin();
+}
+
+async function submitResetPin() {
+  const val = document.getElementById('reset-pin-input').value;
+  if (!val) return;
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(val));
+  const hashHex = Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  if (hashHex === RESET_PIN_HASH) {
+    confirmReset();
+  } else {
+    const inp = document.getElementById('reset-pin-input');
+    inp.classList.add('error');
+    document.getElementById('reset-pin-error').textContent = 'Incorrect reset PIN. Try again.';
+    inp.value = '';
+    inp.focus();
+  }
 }
 
 function closeResetModal() {
@@ -1401,8 +1698,9 @@ function closeResetModal() {
 function confirmReset() {
   // Reset all data for current day
   SLOTS.forEach((_,si) => {
-    data[curDay][si] = {taxi:0, ped:0, coach:0, out:0, cars:{}};
+    data[curDay][si] = {taxi:0, ped:0, coach:0, taxi_out:0, ped_out:0, coach_out:0, out:0, cars:{}, tlots:{}};
     LOTS.forEach(l => { data[curDay][si].cars[l.name] = 0; });
+    TRAFFIC_LOTS.forEach(l => { data[curDay][si].tlots[l.name] = 0; });
   });
   closeResetModal();
   updateTime(); saveData(); refresh();
@@ -1564,13 +1862,17 @@ function buildViewerModeBreakdown() {
   addMbdCard('Cars exited',      carsO,  r(carsO/Math.max(cars,1)*100)+'% of cars left',     Math.min(r(carsO/Math.max(cars,1)*100),100),  statusOf(cars/TOTAL_CAP).c,statusOf(cars/TOTAL_CAP).c,statusOf(cars/TOTAL_CAP).bg,'Lot egress');
 
   addSectionLabel('Net crowd estimate on site');
-  const netIn=taxi+ped+coach*45+cars, netOut=taxiO+pedO+coachO*45+carsO, net=Math.max(netIn-netOut,0);
+  const dropOff = cumDropOff(curDay, SLOTS.length-1);
+  const netIn  = taxi*CROWD.taxi + ped*CROWD.ped + coach*CROWD.coach + cars*CROWD.car_park + dropOff*CROWD.drop_off;
+  const netOut = taxiO*CROWD.taxi + pedO*CROWD.ped + coachO*CROWD.coach + carsO*CROWD.car_out;
+  const net    = Math.max(netIn-netOut,0);
   const nc=document.createElement('div');
   nc.style='grid-column:1/-1;background:var(--cream);border:1px solid var(--gold-border);border-radius:10px;padding:18px 22px;border-top:3px solid var(--gold);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px';
   nc.innerHTML=`<div>
     <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px">Estimated Murid / Jamat currently on site</div>
-    <div style="font-size:42px;font-weight:600;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:var(--gold-deep);line-height:1">${net.toLocaleString()}</div>
-    <div style="font-size:10px;color:var(--muted2);margin-top:5px">of 20,000+ expected &nbsp;&middot;&nbsp; ${r(net/200)}% of event capacity</div>
+    <div style="font-size:42px;font-weight:600;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums;color:var(--gold-deep);line-height:1">${Math.round(net).toLocaleString()}</div>
+    <div style="font-size:10px;color:var(--muted2);margin-top:5px">of 25,000–28,000 expected &nbsp;&middot;&nbsp; ${r(net/265)}% of 26,500 midpoint</div>
+    <div style="font-size:9px;color:var(--muted2);margin-top:3px">Est. method: taxis &times;${CROWD.taxi} + peds &times;1 + coaches &times;${CROWD.coach} + parked cars &times;${CROWD.car_park} + drop-offs &times;${CROWD.drop_off}</div>
   </div>
   <div style="text-align:right">
     <div style="font-size:11px;font-weight:600;color:var(--dark2);margin-bottom:8px">Traffic flow balance</div>
