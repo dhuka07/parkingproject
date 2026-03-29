@@ -210,7 +210,7 @@ body.view-mode .row-3{display:none!important}
 .lsc-cap2{font-size:9px;color:var(--muted2);margin-bottom:8px}
 .lsc-occ{font-size:24px;font-weight:600;font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;line-height:1}
 .lsc-time{font-size:10px;font-weight:700;margin-top:8px;padding:3px 10px;border-radius:8px;display:inline-block}
-.v851-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.v851-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:4px}
 .v851-box{background:var(--cream);border:1px solid var(--gold-border);border-radius:10px;padding:14px;text-align:center;border-top:3px solid transparent}
 .v851-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-bottom:6px}
 .v851-num{font-size:30px;font-weight:700;font-family:'Inter',sans-serif;font-variant-numeric:tabular-nums;line-height:1}
@@ -371,6 +371,19 @@ function doPost(e) {
       <div class="ep-fields" id="flow-851-coach"></div>
       <div class="ep-sec-lbl" style="margin-top:10px;color:#C0742A">&#128652; Coaches &mdash; Princess Blvd</div>
       <div class="ep-fields" id="flow-pblvd"></div>
+      <div class="ep-sec-lbl" style="margin-top:12px;color:#6B4EA8">&#128203; Coaches present now <span style="font-size:8px;font-weight:400;opacity:.7">(snapshot)</span></div>
+      <div class="ep-fields">
+        <div class="ep-field">
+          <label class="ep-label" style="color:#0F6E56">Present in 851</label>
+          <input type="number" class="ep-input" style="border-color:#0F6E56;background:#E1F5EE;color:#085041" min="0" step="1" id="inp-present-851" value="0" oninput="updField('coaches_present_851',this.value)">
+          <span class="ep-hint">coaches in 851 now</span>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label" style="color:#C0742A">Present Prncs Blvd</label>
+          <input type="number" class="ep-input" style="border-color:#C0742A;background:#FFF0DC;color:#8B4A00" min="0" step="1" id="inp-present-pblvd" value="0" oninput="updField('coaches_present_pblvd',this.value)">
+          <span class="ep-hint">coaches on Prncs Blvd now</span>
+        </div>
+      </div>
       <div id="net-851-wrap" style="margin-top:10px"></div>
     </div>
     <!-- EGRESS -->
@@ -389,19 +402,7 @@ function doPost(e) {
           <span class="ep-hint">left staging</span>
         </div>
       </div>
-      <div class="ep-sec-lbl" style="margin-top:12px;color:#C0742A">Coaches being processed <small style="font-weight:400;font-size:8px;opacity:.7">(snapshot)</small></div>
-      <div class="ep-fields">
-        <div class="ep-field">
-          <label class="ep-label" style="color:#C0742A">On Princess Blvd</label>
-          <input type="number" class="ep-input" style="border-color:#C0742A;background:#FFF0DC;color:#8B4A00" min="0" step="1" id="inp-cbp-pblvd" value="0" oninput="updField('coach_on_pblvd',this.value)">
-          <span class="ep-hint">coaches on Prncs Blvd</span>
-        </div>
-        <div class="ep-field">
-          <label class="ep-label" style="color:#0F6E56">In Lot 851</label>
-          <input type="number" class="ep-input" style="border-color:#0F6E56;background:#E1F5EE;color:#085041" min="0" step="1" id="inp-cbp-851" value="0" oninput="updField('coach_in_851',this.value)">
-          <span class="ep-hint">coaches offloading</span>
-        </div>
-      </div>
+      <div class="ep-sec-lbl" style="margin-top:12px;color:#6B4EA8">Coaches being processed <small style="font-weight:400;font-size:8px;opacity:.7">(from Traffic Flow column)</small></div>
       <!-- CBP Widget -->
       <div id="cbp-widget" style="margin-top:10px"></div>
     </div>
@@ -486,12 +487,12 @@ function doPost(e) {
     </div>
   </div>
   <div class="report-section">
-    <div class="report-heading">Lot 851 drop-off — vehicles on site</div>
-    <div class="v851-grid" id="viewer-851"></div>
+    <div class="report-heading">Coaches present now — snapshot</div>
+    <div class="v851-present-grid" id="viewer-present"></div>
   </div>
   <div class="report-section">
-    <div class="report-heading">Parking congestion</div>
-    <div class="vcong-rows" id="viewer-congestion"></div>
+    <div class="report-heading">Lot 851 drop-off — cumulative vehicle flow</div>
+    <div class="v851-grid" id="viewer-851"></div>
   </div>
   <div class="report-section">
     <div class="report-heading">Overall day summary</div>
@@ -500,6 +501,10 @@ function doPost(e) {
   <div class="report-section">
     <div class="report-heading">Parking lot results</div>
     <div class="lot-summary-grid" id="viewer-lots"></div>
+  </div>
+  <div class="report-section">
+    <div class="report-heading">Parking congestion</div>
+    <div class="vcong-rows" id="viewer-congestion"></div>
   </div>
 </div>
 
@@ -611,6 +616,7 @@ const SLOTS = genSlots();
 function emptySlot() {
   const s = {taxi:0,ped:0,coach:0,ttc1:0,ttc2:0,go:0,
              coach_on_pblvd:0,coach_in_851:0,
+             coaches_present_851:0,coaches_present_pblvd:0,
              taxi_out:0,coach_out:0,out:0,
              cars:{},tlots:{},flow:{}};
   LOTS.forEach(l => { s.cars[l.name] = 0; });
@@ -985,6 +991,12 @@ function buildInputs() {
   buildCBP();
 
   /* Egress field values */
+  /* Restore present-coaches snapshot fields */
+  var p851 = document.getElementById('inp-present-851');
+  var pPblvd = document.getElementById('inp-present-pblvd');
+  if(p851)   p851.value   = sl.coaches_present_851||0;
+  if(pPblvd) pPblvd.value = sl.coaches_present_pblvd||0;
+
   const to=document.getElementById('inp-taxi-out');   if(to)   to.value   = sl.taxi_out||0;
   const co=document.getElementById('inp-coach-out');  if(co)   co.value   = sl.coach_out||0;
   const cbpp=document.getElementById('inp-cbp-pblvd');if(cbpp) cbpp.value = sl.coach_on_pblvd||0;
@@ -1051,7 +1063,7 @@ function _compactData() {
     SLOTS.forEach(function(_,si) {
       var s = data[day][si];
       var hasData = s.taxi||s.ped||s.coach||s.ttc1||s.ttc2||s.go||
-        s.coach_on_pblvd||s.coach_in_851||s.taxi_out||s.coach_out||s.out||
+        s.coach_on_pblvd||s.coach_in_851||s.coaches_present_851||s.coaches_present_pblvd||s.taxi_out||s.coach_out||s.out||
         LOTS.some(function(l){return s.cars[l.name]>0;})||
         FLOW_ZONES.some(function(z){return s.flow&&s.flow[z.id]>0;});
       if(hasData) compact.d[day][si] = s;
@@ -1179,6 +1191,8 @@ function _applySlot(s, sl) {
   sl.taxi=s.taxi||0; sl.ped=s.ped||0; sl.coach=s.coach||0;
   sl.ttc1=s.ttc1||0; sl.ttc2=s.ttc2||0; sl.go=s.go||0;
   sl.coach_on_pblvd=s.coach_on_pblvd||0; sl.coach_in_851=s.coach_in_851||0;
+  sl.coaches_present_851=s.coaches_present_851||0;
+  sl.coaches_present_pblvd=s.coaches_present_pblvd||0;
   sl.taxi_out=s.taxi_out||0; sl.coach_out=s.coach_out||0; sl.out=s.out||0;
   LOTS.forEach(function(l)      { sl.cars[l.name] = (s.cars&&s.cars[l.name])||0; });
   FLOW_ZONES.forEach(function(z){ sl.flow[z.id]  = (s.flow&&s.flow[z.id])||0; });
@@ -1240,31 +1254,70 @@ function lastDataSlot(day) {
   /* Find the highest slot index that has any data entered */
   for (var si = SLOTS.length-1; si >= 0; si--) {
     var s = data[day][si];
-    if(s.taxi||s.ped||s.coach||s.taxi_out||s.coach_out||LOTS.some(function(l){return s.cars[l.name]>0;})
+    if(s.taxi||s.ped||s.coach||s.coaches_present_851||s.coaches_present_pblvd||s.taxi_out||s.coach_out||LOTS.some(function(l){return s.cars[l.name]>0;})
       || FLOW_ZONES.some(function(z){return s.flow&&s.flow[z.id]>0;})) return si;
   }
   return 0;
 }
 function buildViewerReport() {
+  try { buildViewerPresent(); }      catch(e) { console.warn(e); }
   try { buildViewer851(); }        catch(e) { console.warn('buildViewer851',e); }
   try { buildViewerCongestion(); } catch(e) { console.warn('buildViewerCongestion',e); }
   try { buildViewerSummary(); }    catch(e) { console.warn('buildViewerSummary',e); }
   try { buildViewerLots(); }       catch(e) { console.warn('buildViewerLots',e); }
 }
+
+function buildViewerPresent() {
+  var el = document.getElementById('viewer-present'); if(!el) return;
+  /* Find the most recent slot that has coaches_present data entered */
+  var upTo = 0;
+  for (var si = SLOTS.length-1; si >= 0; si--) {
+    var s = data[curDay][si];
+    if(s.coaches_present_851 || s.coaches_present_pblvd) { upTo = si; break; }
+  }
+  var snap = data[curDay][upTo] || {};
+  var p851   = snap.coaches_present_851||0;
+  var pPblvd = snap.coaches_present_pblvd||0;
+  var total  = p851 + pPblvd;
+  var c851   = p851>8?'#E24B4A':p851>4?'#BA7517':'#639922';
+  var cPblvd = pPblvd>8?'#E24B4A':pPblvd>4?'#BA7517':'#639922';
+  var cTot   = total>12?'#E24B4A':total>6?'#BA7517':'#639922';
+  var slot   = upTo < SLOTS.length ? SLOTS[upTo] : '—';
+  el.innerHTML =
+    '<div class="v851-box" style="border-top-color:'+c851+';border-top-width:4px">'
+      +'<div class="v851-lbl" style="font-size:10px">&#128652; Coaches in Lot 851</div>'
+      +'<div class="v851-num" style="color:'+c851+';font-size:38px">'+p851+'</div>'
+      +'<div class="v851-detail" style="color:var(--muted2)">present at '+slot+'</div>'
+    +'</div>'
+    +'<div class="v851-box" style="border-top-color:'+cPblvd+';border-top-width:4px">'
+      +'<div class="v851-lbl" style="font-size:10px">&#128652; Coaches on Princess Blvd</div>'
+      +'<div class="v851-num" style="color:'+cPblvd+';font-size:38px">'+pPblvd+'</div>'
+      +'<div class="v851-detail" style="color:var(--muted2)">present at '+slot+'</div>'
+    +'</div>';
+}
+
 function buildViewer851() {
   var el=document.getElementById('viewer-851'); if(!el) return;
-  var upTo = lastDataSlot(curDay);  /* use all slots up to last with data */
+  var upTo = lastDataSlot(curDay);
   var carIn =cumFlow(curDay,'l851_car_in',upTo),  carOut =cumFlow(curDay,'l851_car_out',upTo);
   var cIn   =cumFlow(curDay,'l851_coach_in',upTo),cOut   =cumFlow(curDay,'l851_coach_out',upTo);
   var pIn   =cumFlow(curDay,'pblvd_in',upTo),     pOut   =cumFlow(curDay,'pblvd_out',upTo);
   var carNet=Math.max(carIn-carOut,0), cNet=Math.max(cIn-cOut,0), pNet=Math.max(pIn-pOut,0);
-  var cc=carNet>20?'#E24B4A':carNet>10?'#BA7517':'#639922';
+  /* Snapshot values — use the most recent slot that has them */
+  var presentSnap = data[curDay][upTo]||{};
+  var pres851  = presentSnap.coaches_present_851||0;
+  var presPblvd= presentSnap.coaches_present_pblvd||0;
+  var cc =carNet>20?'#E24B4A':carNet>10?'#BA7517':'#639922';
   var cc2=cNet>8?'#E24B4A':cNet>4?'#BA7517':'#639922';
-  var cp=pNet>8?'#E24B4A':pNet>4?'#BA7517':'#639922';
+  var cp =pNet>8?'#E24B4A':pNet>4?'#BA7517':'#639922';
+  var cp851 =pres851>8?'#E24B4A':pres851>4?'#BA7517':'#639922';
+  var cpPblvd=presPblvd>8?'#E24B4A':presPblvd>4?'#BA7517':'#639922';
   el.innerHTML=
+    /* Row 1: cumulative in/out */
     '<div class="v851-box" style="border-top-color:#5B4EA8"><div class="v851-lbl">Cars on site</div><div class="v851-num" style="color:'+cc+'">'+carNet+'</div><div class="v851-detail" style="color:#9B59B6">↑ '+carIn+' entered &nbsp; ↓ '+carOut+' exited</div></div>'
-   +'<div class="v851-box" style="border-top-color:#0F6E56"><div class="v851-lbl">Coaches in 851</div><div class="v851-num" style="color:'+cc2+'">'+cNet+'</div><div class="v851-detail" style="color:#1A9E75">↑ '+cIn+' entered &nbsp; ↓ '+cOut+' departed</div></div>'
-   +'<div class="v851-box" style="border-top-color:#C0742A"><div class="v851-lbl">Coaches Prncs Blvd</div><div class="v851-num" style="color:'+cp+'">'+pNet+'</div><div class="v851-detail" style="color:#D4882A">↑ '+pIn+' entered &nbsp; ↓ '+pOut+' departed</div></div>';
+   +'<div class="v851-box" style="border-top-color:#0F6E56"><div class="v851-lbl">Coaches in 851 (flow)</div><div class="v851-num" style="color:'+cc2+'">'+cNet+'</div><div class="v851-detail" style="color:#1A9E75">↑ '+cIn+' entered &nbsp; ↓ '+cOut+' departed</div></div>'
+   +'<div class="v851-box" style="border-top-color:#C0742A"><div class="v851-lbl">Coaches Prncs Blvd (flow)</div><div class="v851-num" style="color:'+cp+'">'+pNet+'</div><div class="v851-detail" style="color:#D4882A">↑ '+pIn+' entered &nbsp; ↓ '+pOut+' departed</div></div>'
+  ;
 }
 function buildViewerCongestion() {
   var el=document.getElementById('viewer-congestion'); if(!el) return; el.innerHTML='';
@@ -1321,13 +1374,13 @@ function buildViewerLots() {
 
 /* ── CSV DOWNLOAD ── */
 function downloadCSV() {
-  var rows=['Day,Time,Taxis,Peds,Coaches,Cars in,%Full'];
+  var rows=['Day,Time,Taxis,Peds,Coaches,Cars in,Present 851,Present PBlvd,%Full'];
   [1,2].forEach(function(d) {
     var cumC=0;
     SLOTS.forEach(function(slot,si) {
       var s=data[d][si], cars=LOTS.reduce(function(t,l){return t+(s.cars[l.name]||0);},0);
       cumC+=cars;
-      rows.push(['Day '+d,slot,s.taxi||0,s.ped||0,s.coach||0,cars,Math.min(r(cumC/TOTAL_CAP*100),100)+'%'].join(','));
+      rows.push(['Day '+d,slot,s.taxi||0,s.ped||0,s.coach||0,cars,s.coaches_present_851||0,s.coaches_present_pblvd||0,Math.min(r(cumC/TOTAL_CAP*100),100)+'%'].join(','));
     });
   });
   var blob=new Blob([rows.join('\n')],{type:'text/csv'});
